@@ -20,7 +20,7 @@ const CFG = {
   // (sengaja tidak ditulis di kode karena repo GitHub bersifat publik)
   ADMIN_PASSWORD_DEFAULT: '',
   SESI_DETIK: 21600,          // sesi login 6 jam (diperpanjang otomatis selama dipakai)
-  DASH_CACHE_DETIK: 300,      // dashboard di-cache 5 menit
+  DASH_CACHE_DETIK: 21600,    // dashboard di-cache 6 jam; otomatis dibuang setiap ada surat baru
 };
 
 // Kolom database (header baris 1, urutan harus sama)
@@ -46,11 +46,12 @@ function getInit(token) {
   const sesi = requireAuth_(token);
   cekKonfigurasi_();
   const now = new Date();
+  const rows = logRows_();   // dibaca sekali saja
   return {
     penandatangan: PENANDATANGAN,
-    nomorBerikut: nomorBerikut_(now.getFullYear()),
+    nomorBerikut: nomorBerikut_(now.getFullYear(), rows),
     hariIni: Utilities.formatDate(now, CFG.TZ, 'yyyy-MM-dd'),
-    riwayat: getRiwayat_(),
+    riwayat: getRiwayat_(8, rows),
     petugas: sesi.nama,
   };
 }
@@ -105,9 +106,42 @@ function cariKolom_(kolom, teks, persis) {
   if (persis) tf = tf.matchEntireCell(true);
   const rows = tf.findAll().slice(0, CFG.MAKS_HASIL_CARI).map(r => r.getRow());
   if (!rows.length) return [];
-  const akhir = colLetter_(d.ncol);
-  return d.sh.getRangeList(rows.map(r => 'A' + r + ':' + akhir + r)).getRanges()
-    .map(rg => rowToObj_(rg.getValues()[0]));
+  return bacaBaris_(d, rows).map(rowToObj_);
+}
+
+/**
+ * Baca beberapa baris dengan panggilan sesedikit mungkin: baris yang berdekatan (selisih <= 25)
+ * dibaca sekaligus dalam satu blok. Anggota satu KK biasanya berurutan -> cukup 1 panggilan.
+ */
+function bacaBaris_(d, rows) {
+  const urut = rows.slice().sort((a, b) => a - b), blok = [];
+  urut.forEach(r => {
+    const b = blok[blok.length - 1];
+    if (b && r - b.akhir <= 25) b.akhir = r; else blok.push({ awal: r, akhir: r });
+  });
+  const isi = {};
+  blok.forEach(b => {
+    d.sh.getRange(b.awal, 1, b.akhir - b.awal + 1, d.ncol).getValues()
+      .forEach((v, i) => { isi[b.awal + i] = v; });
+  });
+  return rows.map(r => isi[r]);
+}
+
+/**
+ * Satu panggilan untuk semua data pendukung setelah jenazah dipilih
+ * (sebelumnya 4 panggilan terpisah: cek surat ganda, anggota KK, ayah, ibu).
+ */
+function detailJenazah(token, q) {
+  requireAuth_(token);
+  q = q || {};
+  const nik = String(q.nik || '').replace(/\D/g, ''), noKK = String(q.noKK || '').replace(/\D/g, '');
+  const ortu = (nama, peran) => nama ? cariOrangTua_(nama, peran, q.tglLahir) : null;
+  return {
+    surat: nik ? logRows_().filter(r => r[5] === nik).map(r => ({ nomor: r[3], tgl: r[4], url: r[11] })) : [],
+    keluarga: noKK ? cariKolom_('NO_KK', noKK, true).filter(x => x.NIK !== nik) : [],
+    ayah: ortu(q.ayah, 'A_'),
+    ibu: ortu(q.ibu, 'I_'),
+  };
 }
 
 function colLetter_(n) {
@@ -151,6 +185,10 @@ function anggotaKK(token, noKK) {
  */
 function cariOrangTua(token, nama, peran, tglLahirAnak) {
   requireAuth_(token);
+  return cariOrangTua_(nama, peran, tglLahirAnak);
+}
+
+function cariOrangTua_(nama, peran, tglLahirAnak) {
   const semua = cariKolom_('NAMA', String(nama || '').trim(), true);
   const jk = peran === 'A_' ? 'L' : 'P';
   const anak = keDate_(tglLahirAnak);
@@ -249,8 +287,8 @@ function padNo_(n) {
   return s.length >= 3 ? s : ('000' + s).slice(-3);
 }
 
-function getRiwayat_(jumlah) {
-  return logRows_().slice(-(jumlah || 8)).reverse().map(r => ({
+function getRiwayat_(jumlah, rows) {
+  return (rows || logRows_()).slice(-(jumlah || 8)).reverse().map(r => ({
     waktu: r[0], nomor: r[3], nama: r[6], tglMati: r[7], pelapor: r[8], url: r[11],
   }));
 }
@@ -308,20 +346,22 @@ function generate_(form, petugas) {
     const xlsx = isiXlsx_(tpl, d, namaFile);
     const file = DriveApp.getFolderById(CFG.FOLDER_ARSIP_ID).createFile(xlsx);
 
-    logSheet_().appendRow([
+    const baris = [
       Utilities.formatDate(new Date(), CFG.TZ, 'yyyy-MM-dd HH:mm:ss'), d.TAHUN_SURAT, d.NO_URUT, nomor,
       d.TGL_SURAT, d.J_NIK || '', d.J_NAMA, d.J_TGL_MATI || '', d.P_NAMA || '', d.TTD_NAMA || '',
       petugas || Session.getActiveUser().getEmail() || '', file.getUrl(),
       dusunJenazah_(d), d.J_RT || '', d.J_RW || '', d.J_JK || '', d.J_UMUR || '', d.J_SEBAB || '',
       '', '', JSON.stringify(d),
-    ]);
+    ];
+    logSheet_().appendRow(baris);
     SpreadsheetApp.flush();
     hapusCacheDashboard_();
+    rows.push(baris.map(String));   // tanpa membaca ulang sheet log
 
     return {
       nama: namaFile, base64: Utilities.base64Encode(xlsx.getBytes()), url: file.getUrl(),
       nomor: nomor, peringatan: warn,
-      nomorBerikut: nomorBerikut_(d.TAHUN_SURAT), riwayat: getRiwayat_(),
+      nomorBerikut: nomorBerikut_(d.TAHUN_SURAT, rows), riwayat: getRiwayat_(8, rows),
     };
   } finally {
     lock.releaseLock();
@@ -384,7 +424,7 @@ function lengkapiData_(d, tglSurat, warn) {
       const v = d[p + f];
       if (v && String(v).length > BATAS[f]) {
         warn.push(LABEL[p] + ': ' + f.replace('_', ' ').toLowerCase() + ' ' + String(v).length +
-          ' huruf, kotak hanya ' + BATAS[f] + '. Rapikan di sheet DATA.');
+          ' huruf, sedangkan kotak hanya ' + BATAS[f] + '. Singkat isiannya.');
       }
     });
   });
@@ -479,17 +519,17 @@ function cekSetup() {
  */
 function login(password) {
   const cache = CacheService.getScriptCache();
-  if (cache.get('kunci_login')) throw new Error('Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.');
+  if (cache.get('kunci_login')) throw new Error('Terlalu banyak percobaan yang salah. Coba lagi 10 menit lagi.');
   const benar = PropertiesService.getScriptProperties().getProperty('ADMIN_PASSWORD') || CFG.ADMIN_PASSWORD_DEFAULT;
-  if (!benar) throw new Error('Password admin belum diatur. Isi Properti skrip ADMIN_PASSWORD di Setelan Proyek.');
+  if (!benar) throw new Error('Kata sandi petugas belum diatur. Isi Properti skrip ADMIN_PASSWORD di Setelan Proyek.');
   if (hash_(String(password || '')) !== hash_(String(benar))) {
     const n = (parseInt(cache.get('gagal_login'), 10) || 0) + 1;
     if (n >= 5) {
       cache.put('kunci_login', '1', 600); cache.remove('gagal_login');
-      throw new Error('Password salah 5 kali. Login dikunci 10 menit.');
+      throw new Error('Kata sandi salah 5 kali. Masuk dikunci selama 10 menit.');
     }
     cache.put('gagal_login', String(n), 600);
-    throw new Error('Password salah. Sisa percobaan: ' + (5 - n) + '.');
+    throw new Error('Kata sandi salah. Sisa percobaan: ' + (5 - n) + '.');
   }
   cache.remove('gagal_login');
   const nm = 'ADMIN';
@@ -508,10 +548,10 @@ function cekSesi(token) {
 }
 
 function requireAuth_(token) {
-  if (!token || typeof token !== 'string' || token.length < 32) throw new Error('SESI_HABIS: Silakan masuk sebagai admin.');
+  if (!token || typeof token !== 'string' || token.length < 32) throw new Error('SESI_HABIS: Silakan masuk sebagai petugas.');
   const cache = CacheService.getScriptCache();
   const raw = cache.get('sesi_' + token);
-  if (!raw) throw new Error('SESI_HABIS: Sesi berakhir, silakan masuk lagi.');
+  if (!raw) throw new Error('SESI_HABIS: Sesi berakhir. Silakan masuk lagi.');
   cache.put('sesi_' + token, raw, CFG.SESI_DETIK);   // perpanjang selama dipakai
   return JSON.parse(raw);
 }

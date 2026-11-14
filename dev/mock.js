@@ -25,6 +25,9 @@
     anggotaKK: function (t, kk) { cek(t); return WARGA.filter(function (w) { return w.NO_KK === kk; }); },
     cariOrangTua: function (t, nama) { cek(t); return { cocok: WARGA.filter(function (w) { return w.NAMA === String(nama).toUpperCase(); }), lain: [] }; },
     cekSuratNik: function (t) { cek(t); return []; },
+    detailJenazah: function (t, q) { cek(t);
+      var ortu = function (n) { return n ? { cocok: WARGA.filter(function (w) { return w.NAMA === String(n).toUpperCase(); }), lain: [] } : null; };
+      return { surat: [], keluarga: WARGA.filter(function (w) { return w.NO_KK === q.noKK && w.NIK !== q.nik; }), ayah: ortu(q.ayah), ibu: ortu(q.ibu) }; },
     generateSuratKematian: function (t, d) { cek(t); return { nama: 'SKK_015_XI_2026_' + d.J_NAMA.replace(/\s+/g, '_') + '.xlsx', base64: btoa('contoh'), url: 'https://drive.google.com/', nomor: '400.12.3.1/ 015 / XI / 2026', peringatan: ['Contoh peringatan: Saksi I NIK tidak 16 digit'], nomorBerikut: '016', riwayat: [] }; },
     getRiwayatList: function (t) { cek(t); return { list: LOG.slice().reverse(), tahunList: ['2026', '2025'] }; },
     getRiwayatDetail: function (t, row) { cek(t); var r = LOG.filter(function (x) { return x.row === row; })[0]; return Object.assign({}, r, { ttd: 'SADAR', rt: '003', rw: '004', sebab: '1', catatanWaktu: '', data: row === 3 ? DATA : null }); },

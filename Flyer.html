@@ -1,5 +1,5 @@
-<!-- ===================== MENU BUAT FLYER WA ===================== -->
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<!-- ===================== MENU KARTU DUKA (gambar ucapan untuk WhatsApp) ===================== -->
+<!-- Huruf Amiri & Playfair dimuat hanya saat menu ini dibuka (lihat flSiapkan), agar halaman awal lebih cepat. -->
 <style>
   body:not([data-view="flyer"]) #viewFlyer{display:none}
   body[data-view="flyer"] #viewDash, body[data-view="flyer"] #viewForm, body[data-view="flyer"] #viewRiwayat,
@@ -39,8 +39,8 @@
 <section class="fl" id="viewFlyer" aria-labelledby="flTitle">
   <div class="fl-head">
     <div>
-      <h2 id="flTitle">Buat Flyer WA</h2>
-      <p>Ucapan belasungkawa dari Pemerintah Desa Merden. Periksa data almarhum, lengkapi pemakaman, pilih template, lalu unduh JPG.</p>
+      <h2 id="flTitle">Kartu duka</h2>
+      <p>Gambar ucapan belasungkawa dari Pemerintah Desa Merden untuk dikirim lewat WhatsApp. Periksa data almarhum, lengkapi jadwal pemakaman, pilih templat, lalu unduh gambar.</p>
     </div>
     <button class="btn btn-g" type="button" id="flBack" onclick="flKembali()">Kembali ke surat</button>
   </div>
@@ -48,7 +48,7 @@
   <div class="fl-wrap">
     <div>
       <details class="step fl-cari" id="flCariBox">
-        <summary><span class="num">+</span><h2>Ambil data dari database</h2><span class="hint">Cari</span></summary>
+        <summary><span class="num">+</span><h2>Ambil data dari basis data</h2><span class="hint">Cari</span></summary>
         <div class="step-b" style="padding-top:0">
           <div class="search">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -59,9 +59,9 @@
       </details>
 
       <section class="step">
-        <div class="step-h"><span class="num">1</span><h2>Data almarhum</h2><span class="hint">Terisi dari form surat</span></div>
+        <div class="step-h"><span class="num">1</span><h2>Data almarhum</h2><span class="hint">Terisi dari formulir surat</span></div>
         <div class="step-b"><div class="grid">
-          <div class="c4"><label class="f" for="fl_nama">Nama lengkap (seperti tampil di flyer)</label><input class="in" id="fl_nama" autocomplete="off" maxlength="60"></div>
+          <div class="c4"><label class="f" for="fl_nama">Nama lengkap (seperti tampil di kartu)</label><input class="in" id="fl_nama" autocomplete="off" maxlength="60"></div>
           <div><label class="f" for="fl_jk">Jenis kelamin</label>
             <select class="in" id="fl_jk"><option value="">Pilih</option><option value="1">Laki-laki</option><option value="2">Perempuan</option></select></div>
           <div class="c2"><label class="f" for="fl_ayah">Nama ayah (untuk bin/binti)</label><input class="in" id="fl_ayah" autocomplete="off" maxlength="40"></div>
@@ -79,12 +79,12 @@
           <div><label class="f" for="fl_tglWafat">Tanggal wafat</label><input class="in" type="date" id="fl_tglWafat"></div>
           <div><label class="f" for="fl_jamWafat">Pukul wafat</label><input class="in" type="time" id="fl_jamWafat"></div>
           <div class="c2"><label class="f" for="fl_tempatWafat">Tempat wafat</label><input class="in" id="fl_tempatWafat" autocomplete="off" maxlength="50"></div>
-          <div class="c4"><label class="fl-cek"><input type="checkbox" id="fl_tempatOn">Tampilkan tempat wafat di flyer</label></div>
+          <div class="c4"><label class="fl-cek"><input type="checkbox" id="fl_tempatOn">Tampilkan tempat wafat di kartu</label></div>
           <div><label class="f" for="fl_tglMakam">Tanggal dimakamkan</label><input class="in" type="date" id="fl_tglMakam">
-            <div class="quick"><button type="button" onclick="flMakamCepat(0)">Hari wafat</button><button type="button" onclick="flMakamCepat(1)">Besoknya</button></div></div>
+            <div class="quick"><button type="button" onclick="flMakamCepat(0)">Hari wafat</button><button type="button" onclick="flMakamCepat(1)">Keesokan harinya</button></div></div>
           <div><label class="f" for="fl_jamMakam">Pukul dimakamkan</label><input class="in" type="time" id="fl_jamMakam"></div>
           <div class="c2"><label class="f" for="fl_tempatMakam">Tempat pemakaman</label><input class="in" id="fl_tempatMakam" autocomplete="off" maxlength="50" placeholder="TPU Dusun ..."></div>
-          <div class="c4"><label class="f" for="fl_tambahan">Kalimat tambahan (opsional)</label><textarea class="in" id="fl_tambahan" maxlength="120" placeholder="Misalnya: Jenazah disalatkan di Masjid ... ba'da Zuhur"></textarea></div>
+          <div class="c4"><label class="f" for="fl_tambahan">Kalimat tambahan (opsional)</label><textarea class="in" id="fl_tambahan" maxlength="120" placeholder="Misalnya: Jenazah disalatkan di Masjid ... setelah salat Zuhur"></textarea></div>
         </div></div>
       </section>
 
@@ -99,9 +99,9 @@
     </div>
 
     <aside class="fl-prev">
-      <div class="tpl" id="flTpl" role="group" aria-label="Pilih template"></div>
-      <canvas id="flCanvas" width="1080" height="1350" role="img" aria-label="Pratinjau flyer ucapan belasungkawa"></canvas>
-      <div class="fl-act"><button class="btn btn-p btn-big" id="flUnduh" type="button" onclick="flUnduh()">Unduh JPG</button></div>
+      <div class="tpl" id="flTpl" role="group" aria-label="Pilih templat"></div>
+      <canvas id="flCanvas" width="1080" height="1350" role="img" aria-label="Pratinjau kartu ucapan belasungkawa"></canvas>
+      <div class="fl-act"><button class="btn btn-p btn-big" id="flUnduh" type="button" onclick="flUnduh()">Unduh gambar (JPG)</button></div>
       <div class="fl-msg" id="flMsg" role="status" aria-live="polite"></div>
     </aside>
   </div>
@@ -239,7 +239,7 @@ function flIsi(i) {
   setVal('fl_tempatWafat', flRapi(i.tempatWafat)); $('fl_tempatOn').checked = false;
   ['fl_tglMakam', 'fl_jamMakam', 'fl_tempatMakam', 'fl_tambahan'].forEach(id => setVal(id, ''));
   flSetJenis(i.agama === '0' ? 'umum' : 'islami');                /* nonmuslim -> template umum otomatis */
-  flPesan(i.agama === '0' ? 'Agama almarhum tercatat bukan Islam, jadi dipakai ucapan umum.' : '', i.agama === '0' ? 'warn' : '');
+  flPesan(i.agama === '0' ? 'Agama almarhum tercatat bukan Islam sehingga dipakai ucapan umum.' : '', i.agama === '0' ? 'warn' : '');
   flJadwal();
 }
 function flBaca() {
@@ -253,7 +253,7 @@ function flBaca() {
 }
 function flMakamCepat(n) {
   const w = parseTgl(val('fl_tglWafat'));
-  if (!w) { flPesan('Isi tanggal wafat dulu.', 'warn'); $('fl_tglWafat').focus(); return; }
+  if (!w) { flPesan('Isi tanggal wafat terlebih dahulu.', 'warn'); fokus('fl_tglWafat'); return; }
   w.setDate(w.getDate() + n);
   setVal('fl_tglMakam', flIso(w)); flJadwal();
 }
@@ -565,7 +565,7 @@ function flPilih(i) {
   const r = FL.hasil[i]; if (!r) return;
   flIsi(flDariDb(r));
   $('flRes').innerHTML = ''; setVal('flQ', ''); $('flCariBox').open = false;
-  $('fl_tglWafat').focus();
+  fokus('fl_tglWafat');
 }
 
 /* ======================================================== FLYER: BUKA, KEMBALI, UNDUH */
@@ -593,6 +593,22 @@ function flKembali() { showView(FL.src === 'riwayat' ? 'riwayat' : 'form'); }
 function flSiapkan() {
   if (FL.siap) return;
   FL.siap = true;
+  if (!document.getElementById('flFont')) {       /* muat huruf kartu hanya saat dibutuhkan */
+    const l = document.createElement('link');
+    l.id = 'flFont'; l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap';
+    l.onload = () => flSiapkanHuruf();
+    document.head.appendChild(l);
+  }
+  flSiapkanHuruf();
+  runA('getFlyerInit').then(r => {
+    if (!r || !r.logo) return;
+    const im = new Image();
+    im.onload = () => { FL.logo = im; flGambar(); };
+    im.src = r.logo;
+  }).catch(() => {});
+}
+function flSiapkanHuruf() {
   if (document.fonts && document.fonts.load) {
     Promise.all([
       document.fonts.load('700 80px Amiri', '\u0625\u0646\u0627'), document.fonts.load('400 44px Amiri', '\u0627\u0644\u0644\u0647\u0645'),
@@ -601,12 +617,6 @@ function flSiapkan() {
       document.fonts.load('600 30px "Plus Jakarta Sans"'), document.fonts.load('400 24px "Plus Jakarta Sans"'),
     ]).then(() => flGambar()).catch(() => flGambar());
   }
-  runA('getFlyerInit').then(r => {
-    if (!r || !r.logo) return;
-    const im = new Image();
-    im.onload = () => { FL.logo = im; flGambar(); };
-    im.src = r.logo;
-  }).catch(() => {});
 }
 
 function flUnduhLokal(b64, nama) {
@@ -617,7 +627,7 @@ function flUnduhLokal(b64, nama) {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 3000);
 }
 
-/** Unduh JPG langsung ke HP/laptop. Tidak disimpan ke Drive. */
+/** Unduh JPG langsung ke ponsel/laptop. Tidak disimpan ke Drive. */
 function flUnduh() {
   const d = flBaca();
   if (!d.nama) { flPesan('Nama almarhum belum diisi.', 'err'); $('fl_nama').focus(); return; }
@@ -628,9 +638,9 @@ function flUnduh() {
   let url;
   try { url = $('flCanvas').toDataURL('image/jpeg', 0.9); }
   catch (e) { flPesan('Gambar gagal dibuat: ' + e.message, 'err'); return; }
-  const file = 'Flyer_Duka_' + d.nama.replace(/[^\w ]/g, '').trim().replace(/\s+/g, '_') + '_' + d.tglWafat.replace(/-/g, '') + '.jpg';
+  const file = 'Kartu_Duka_' + d.nama.replace(/[^\w ]/g, '').trim().replace(/\s+/g, '_') + '_' + d.tglWafat.replace(/-/g, '') + '.jpg';
   flUnduhLokal(url.slice(url.indexOf(',') + 1), file);
-  flPesan('JPG terunduh. Kirim lewat WhatsApp bersama teks ucapan.', 'ok');
+  flPesan('Gambar terunduh. Kirim lewat WhatsApp bersama teks ucapan.', 'ok');
 }
 
 function flSalin() {
@@ -657,13 +667,13 @@ function flWA() { window.open('https:\/\/wa.me/?text=' + encodeURIComponent($('f
 
   /* tombol di panel kanan form surat */
   const bf = document.createElement('button');
-  bf.className = 'btn btn-g btn-big btn-flyer'; bf.id = 'btnFlyer'; bf.type = 'button'; bf.textContent = 'Buat Flyer WA';
+  bf.className = 'btn btn-g btn-big btn-flyer'; bf.id = 'btnFlyer'; bf.type = 'button'; bf.textContent = 'Buat kartu duka';
   bf.onclick = () => bukaFlyer('form');
   $('btnGen').insertAdjacentElement('afterend', bf);
 
   /* tombol di kotak "Surat selesai dibuat" */
   const bd = document.createElement('button');
-  bd.className = 'btn btn-g btn-sm'; bd.type = 'button'; bd.textContent = 'Buat Flyer WA';
+  bd.className = 'btn btn-g btn-sm'; bd.type = 'button'; bd.textContent = 'Kartu duka';
   bd.onclick = () => bukaFlyer('form');
   $('doneBox').querySelector('.row').appendChild(bd);
 
@@ -691,7 +701,7 @@ function flWA() { window.open('https:\/\/wa.me/?text=' + encodeURIComponent($('f
     const act = document.querySelector('#rwDetail .dt-head .act');
     if (!act) return;
     const btn = document.createElement('button');
-    btn.className = 'btn btn-p btn-sm'; btn.type = 'button'; btn.textContent = 'Buat Flyer WA';
+    btn.className = 'btn btn-p btn-sm'; btn.type = 'button'; btn.textContent = 'Kartu duka';
     btn.onclick = () => bukaFlyer('riwayat', xd.data);
     act.prepend(btn);
   };

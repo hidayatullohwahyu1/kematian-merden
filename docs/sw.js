@@ -1,9 +1,9 @@
 /* Service worker PWA SK Kematian Merden.
- * Hanya menyimpan "cangkang" aplikasi (halaman ini + ikon). Data warga tidak pernah disimpan
- * di HP: isi aplikasi tetap dimuat langsung dari Google Apps Script.
+ * Hanya menyimpan "cangkang" aplikasi (halaman ini + ikon). Service worker tidak menyimpan data warga;
+ * isi aplikasi tetap dimuat langsung dari Google Apps Script.
  * Naikkan VERSI setiap kali file di folder docs/ diubah.
  */
-const VERSI = 'skk-merden-v1';
+const VERSI = 'skk-merden-v2';
 const CANGKANG = [
   './',
   './index.html',

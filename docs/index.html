@@ -67,7 +67,7 @@
 
 <div id="pasang" role="dialog" aria-label="Pasang aplikasi">
   <img src="icons/icon-192.png" alt="">
-  <div class="t"><b>Pasang di HP</b>Buka lebih cepat dari layar utama.</div>
+  <div class="t"><b>Pasang di ponsel</b>Buka lebih cepat dari layar utama.</div>
   <button class="btn" type="button" id="btnPasang">Pasang</button>
   <button class="x" type="button" id="tutupPasang" aria-label="Tutup">&times;</button>
 </div>
@@ -92,16 +92,26 @@
     muatTeks.textContent = 'Memuat aplikasi…';
     clearTimeout(lambat);
     lambat = setTimeout(function () {
-      if (!sudahMuat) muatTeks.textContent = 'Server sedang lambat, mohon tunggu sebentar…';
+      if (!sudahMuat) muatTeks.textContent = 'Server sedang lambat. Mohon tunggu sebentar…';
     }, 8000);
     app.src = URL_APP + (URL_APP.indexOf('?') < 0 ? '?' : '&') + 'pwa=1';
   };
 
-  app.addEventListener('load', function () {
-    if (!app.src) return;
+  function tutupMuat() {
     sudahMuat = true;
-    clearTimeout(lambat);
+    clearTimeout(lambat); clearTimeout(cadangan);
     muat.classList.add('hilang');
+  }
+  // Aplikasi di dalam memberi kabar "siap" setelah isi pertamanya tampil (lihat kabariSiap di Index.html).
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.skk === 'siap' && /\.googleusercontent\.com$|script\.google\.com$/.test(new URL(e.origin).hostname)) tutupMuat();
+  });
+  // Cadangan: bila kabar tidak datang (versi lama), tutup layar pembuka 4 detik setelah bingkai termuat.
+  var cadangan;
+  app.addEventListener('load', function () {
+    if (!app.src || sudahMuat) return;
+    clearTimeout(cadangan);
+    cadangan = setTimeout(tutupMuat, 4000);
   });
 
   window.addEventListener('online', function () { if (!sudahMuat) muatUlang(); else aturOnline(); });

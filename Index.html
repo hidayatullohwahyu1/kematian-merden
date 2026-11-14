@@ -424,22 +424,48 @@
     background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;
     mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
   body.masuk .kunci{display:none}
+  .nv .ni{display:none}
+  .nv .nl{display:inline-flex;align-items:center}
+  /* HP & tablet: menu pindah ke bawah layar, seperti aplikasi Android */
   @media (max-width:860px){
-    .nav{order:4;width:100%;margin-top:0}
-    .nav .nv{flex:1;padding:8px 4px;white-space:nowrap}
     .brand{flex:1 1 0}
+    .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;width:auto;gap:2px;background:#fff;
+      border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(24,38,46,.06);padding:4px 6px calc(4px + env(safe-area-inset-bottom))}
+    .nav .nv{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+      color:var(--muted);opacity:1;font-size:11.5px;font-weight:600;min-height:54px;padding:4px 2px;border-radius:12px;white-space:nowrap}
+    .nav .nv:hover{background:#F2F4F3}
+    .nav .nv .ni{display:block;width:22px;height:22px}
+    .nav .nv[aria-current="page"]{color:var(--nila);background:var(--nila-soft)}
+    .nav .nv .kunci{width:10px;height:10px;margin-right:3px}
+    .nav .lbl-l{display:none}.nav .lbl-s{display:inline}
+    body{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+    .mbar{bottom:calc(62px + env(safe-area-inset-bottom))!important;box-shadow:0 -4px 16px rgba(24,38,46,.08)}
+    .wrap{padding-bottom:96px}
+    body #toast{top:auto;bottom:calc(140px + env(safe-area-inset-bottom));transform:translate(-50%,20px)}
+    body #toast.show{transform:translate(-50%,0)}
   }
   @media (max-width:640px){
-    .top-in{padding:10px 12px 8px}
+    .top-in{padding:10px 12px}
     .seal{width:34px;height:34px}
     .top h1{font-size:15px;line-height:1.25}
     .top p{font-size:12.5px}
     .brand{gap:10px}
-    .akun-btn{height:36px;padding:0 12px;font-size:13.5px}
+    .akun-btn{height:38px;padding:0 14px;font-size:14px}
     .akun-chip{display:none}
-    .nav{gap:2px}
-    .nav .nv{font-size:13.5px;min-height:38px}
   }
+  /* indikator proses ke server */
+  #prog{position:fixed;left:0;right:0;top:0;height:3px;z-index:80;pointer-events:none;opacity:0;transition:opacity .2s;
+    background:linear-gradient(90deg,transparent,#7FA2D6,var(--nila),transparent);background-size:40% 100%;background-repeat:no-repeat;
+    animation:prog 1.1s ease-in-out infinite}
+  body.sibuk #prog{opacity:1}
+  @keyframes prog{from{background-position:-40% 0}to{background-position:140% 0}}
+  /* kotak info/galat yang bisa dicoba ulang */
+  .info-box{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-radius:var(--r-md);margin-bottom:14px;font-size:14px;line-height:1.45}
+  .info-box[hidden]{display:none}
+  .info-box .tx{flex:1 1 220px;min-width:0}
+  .info-box.err{background:var(--err-soft);color:var(--err);border:1px solid #F3C7C2}
+  .info-box.draf{background:var(--nila-soft);color:var(--nila-ink);border:1px solid #C9D6EA}
+  .info-box .act{display:flex;gap:8px;flex-wrap:wrap}
   @media (max-width:340px){ .top h1{font-size:14px} .brand .seal{display:none} .akun-btn{padding:0 10px} }
 
   /* login */
@@ -486,6 +512,7 @@
   .step{scroll-margin-top:84px}
   .step-desc{margin:6px 20px 0 60px;font-size:13.5px;color:var(--muted);line-height:1.45}
   @media (max-width:640px){.step-desc{margin:6px 16px 0}.stepper{padding:6px 4px}.stepper button{font-size:11px}}
+  @media (max-width:380px){.stepper button{font-size:10.5px;line-height:1.15}.stepper span{white-space:normal;overflow:visible;text-align:center}}
   .step-h .req,.step-h .opt,.who h3 .req,.who h3 .opt{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
   .step-h .req,.step-h .opt{margin-left:auto}
   .step-h .req,.who h3 .req{background:var(--err-soft);color:var(--err)}
@@ -510,6 +537,7 @@
 </style>
 </head>
 <body>
+<div id="prog" aria-hidden="true"></div>
 <header class="top"><div class="top-in">
   <button class="brand" type="button" onclick="keBeranda()" title="Kembali ke Beranda" aria-label="Surat Keterangan Kematian, kembali ke Beranda">
     <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></div>
@@ -518,19 +546,27 @@
   <div class="akun">
     <button class="akun-btn masuk" id="btnMasuk" type="button" onclick="masukDariHeader()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-      Masuk<span class="lbl-l">&nbsp;petugas</span></button>
+      <span>Masuk<span class="lbl-l"> petugas</span></span></button>
     <div class="akun-in" id="whoTop" hidden>
-      <span class="akun-chip" title="Anda sedang masuk sebagai petugas"><i aria-hidden="true"></i><span id="whoNama">Admin</span></span>
+      <span class="akun-chip" title="Anda sedang masuk sebagai petugas"><i aria-hidden="true"></i><span id="whoNama">Petugas</span></span>
       <button class="akun-btn" type="button" onclick="keluar()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3M16 17l5-5-5-5M21 12H9"/></svg>
         Keluar</button>
     </div>
   </div>
   <nav class="nav" aria-label="Menu utama">
-    <button class="nv" id="nvDash" type="button" onclick="showView('dash')">Beranda</button>
-    <button class="nv" id="nvForm" type="button" onclick="bukaBuatSurat()"><span class="kunci" aria-hidden="true"></span><span class="lbl-l">Buat surat</span><span class="lbl-s">Buat</span></button>
-    <button class="nv" id="nvRiwayat" type="button" onclick="bukaRiwayat()"><span class="kunci" aria-hidden="true"></span>Riwayat</button>
-    <button class="nv" id="nvFlyer" type="button" onclick="flyerSiap() && bukaFlyer('menu')"><span class="kunci" aria-hidden="true"></span><span class="lbl-l">Buat Flyer WA</span><span class="lbl-s">Flyer</span></button>
+    <button class="nv" id="nvDash" type="button" onclick="showView('dash')">
+      <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span class="nl">Beranda</span></button>
+    <button class="nv" id="nvForm" type="button" onclick="bukaBuatSurat()">
+      <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9 14h6"/></svg>
+      <span class="nl"><span class="kunci" aria-hidden="true"></span><span class="lbl-l">Buat surat</span><span class="lbl-s">Buat surat</span></span></button>
+    <button class="nv" id="nvRiwayat" type="button" onclick="bukaRiwayat()">
+      <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <span class="nl"><span class="kunci" aria-hidden="true"></span>Riwayat</span></button>
+    <button class="nv" id="nvFlyer" type="button" onclick="flyerSiap() && bukaFlyer('menu')">
+      <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      <span class="nl"><span class="kunci" aria-hidden="true"></span>Kartu duka</span></button>
   </nav>
 </div></header>
 
@@ -547,14 +583,16 @@
       <button class="btn btn-p" type="button" onclick="bukaBuatSurat()">Buat surat</button>
     </div>
   </div>
+  <div class="info-box err" id="dErr" role="alert" hidden><div class="tx" id="dErrTx"></div>
+    <div class="act"><button class="btn btn-p btn-sm" type="button" onclick="loadDash($('dTahun').value)">Coba lagi</button></div></div>
   <section class="card alur" aria-labelledby="alurTitle">
     <div class="card-h"><div><h3 id="alurTitle">Cara membuat surat (khusus petugas)</h3><p>Lima langkah, kurang lebih 3 menit</p></div></div>
     <ol class="alur-list">
-      <li><b>Masuk</b><span>Ketuk tombol <em>Masuk</em> di kanan atas, lalu ketik password.</span></li>
+      <li><b>Masuk</b><span>Ketuk tombol <em>Masuk</em> di kanan atas, lalu ketik kata sandi.</span></li>
       <li><b>Cari almarhum</b><span>Ketik nama, NIK, atau nomor KK lalu pilih. Data KK dan orang tua terisi otomatis.</span></li>
       <li><b>Waktu kematian</b><span>Isi tanggal meninggal (wajib), pukul, tempat, dan sebab.</span></li>
       <li><b>Pelapor dan saksi</b><span>Pelapor wajib. Ketuk anggota keluarga untuk mengisi cepat.</span></li>
-      <li><b>Buat file Excel</b><span>File terunduh dan tersimpan di arsip. Cetak, tanda tangan, cap.</span></li>
+      <li><b>Buat berkas Excel</b><span>Berkas terunduh dan tersimpan di arsip. Cetak, tanda tangani, lalu beri cap.</span></li>
     </ol>
   </section>
   <div class="tiles" id="dTiles">
@@ -582,7 +620,7 @@
           <li>KTP pelapor dan KTP dua orang saksi</li>
           <li>Surat keterangan dari rumah sakit/puskesmas, bila meninggal di fasilitas kesehatan</li>
         </ol>
-        <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Surat dari desa dipakai untuk mengurus akta kematian di Dindukcapil. Persyaratan dapat berubah; tanyakan petugas bila ragu.</p>
+        <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Surat dari desa dipakai untuk mengurus akta kematian di Disdukcapil. Persyaratan dapat berubah; tanyakan kepada petugas bila ragu.</p>
       </div>
     </div>
   </div>
@@ -615,12 +653,12 @@
     <h2 id="lgTitle">Masuk petugas desa</h2>
     <p id="lgInfo">Pembuatan surat hanya untuk petugas desa.</p>
     <input type="hidden" id="lgUser" value="admin" autocomplete="username">
-    <div class="fld"><label class="f" for="lgPw">Password petugas</label>
-      <div class="pw"><input class="in" id="lgPw" type="password" required autocomplete="current-password" placeholder="Ketik password"><button type="button" onclick="lihatPw(this)">Lihat</button></div></div>
+    <div class="fld"><label class="f" for="lgPw">Kata sandi petugas</label>
+      <div class="pw"><input class="in" id="lgPw" type="password" required autocomplete="current-password" placeholder="Ketik kata sandi"><button type="button" onclick="lihatPw(this)">Lihat</button></div></div>
     <div class="lg-err" id="lgErr" role="alert"></div>
     <button class="btn btn-p btn-big" id="lgBtn" type="submit"><span class="spin"></span>Masuk</button>
     <button class="btn btn-t lg-batal" type="button" onclick="tutupLogin()">Batal</button>
-    <p class="lg-note">Sesi tetap aktif 6 jam selama dipakai. Ketuk <b>Keluar</b> di kanan atas bila memakai HP bersama.</p>
+    <p class="lg-note">Sesi tetap aktif 6 jam selama dipakai. Ketuk <b>Keluar</b> di kanan atas bila memakai ponsel bersama.</p>
   </form>
 </div>
 <div id="tip" role="tooltip"></div>
@@ -628,6 +666,11 @@
 
 <div class="wrap" id="viewForm">
 <main>
+  <div class="info-box err" id="formErr" role="alert" hidden><div class="tx" id="formErrTx"></div>
+    <div class="act"><button class="btn btn-p btn-sm" type="button" onclick="loadInit()">Coba lagi</button></div></div>
+  <div class="info-box draf" id="drafBox" hidden><div class="tx" id="drafTx"></div>
+    <div class="act"><button class="btn btn-p btn-sm" type="button" onclick="pulihkanDraf()">Lanjutkan isian</button>
+      <button class="btn btn-g btn-sm" type="button" onclick="buangDraf()">Buang</button></div></div>
   <nav class="stepper" id="stepper" aria-label="Langkah pembuatan surat">
     <button type="button" data-st="1"><i>1</i><span>Almarhum</span></button>
     <button type="button" data-st="2"><i>2</i><span>Waktu</span></button>
@@ -687,7 +730,7 @@
 <aside>
   <div class="panel step" id="st5">
     <div class="step-h"><span class="num">5</span><h2>Periksa dan buat surat</h2></div>
-    <p class="step-desc">Cek daftar di bawah. Bila semua yang wajib sudah hijau, ketuk <b>Buat file Excel</b>.</p>
+    <p class="step-desc">Cek daftar di bawah. Bila semua yang wajib sudah hijau, ketuk <b>Buat berkas Excel</b>.</p>
     <div class="letter">
       <div class="lbl" id="nomorLbl">Nomor surat</div>
       <div class="nomor" id="nomorView">400.12.3.1/ … / … / …</div>
@@ -698,7 +741,7 @@
       <div class="grid">
         <div><label class="f" for="TGL_SURAT_ISO">Tanggal surat</label><input class="in" type="date" id="TGL_SURAT_ISO"></div>
         <div><label class="f" for="NO_URUT">Nomor urut</label><input class="in" id="NO_URUT" inputmode="numeric" placeholder="Otomatis"></div>
-        <div class="c4"><label class="f" for="ttd">Penandatangan</label><select class="in" id="ttd"></select></div>
+        <div class="c4"><label class="f" for="ttd">Penanda tangan</label><select class="in" id="ttd"></select></div>
       </div>
     </div>
     <div class="p-sec">
@@ -706,14 +749,14 @@
       <ul class="warns" id="conflicts" aria-live="polite"></ul>
     </div>
     <div class="go">
-      <button class="btn btn-p btn-big" id="btnGen" onclick="generate()"><span class="spin"></span><span class="lbl-gen">Buat file Excel</span></button>
+      <button class="btn btn-p btn-big" id="btnGen" onclick="generate()"><span class="spin"></span><span class="lbl-gen">Buat berkas Excel</span></button>
       <div class="status" id="status" role="status" aria-live="polite"></div>
       <ul class="warns" id="warns"></ul>
       <div class="done-box" id="doneBox">
         <b id="doneText">Surat selesai dibuat</b>
-        <div style="font-size:13.5px;margin-top:2px">Tersimpan di arsip Drive. Jika file belum terunduh, klik Unduh file.</div>
+        <div style="font-size:13.5px;margin-top:2px">Tersimpan di arsip Drive. Jika berkas belum terunduh, ketuk Unduh berkas.</div>
         <div class="row">
-          <button class="btn btn-p btn-sm" onclick="unduhLagi()">Unduh file</button>
+          <button class="btn btn-p btn-sm" onclick="unduhLagi()">Unduh berkas</button>
           <a class="btn btn-g btn-sm" id="driveLink" target="_blank" rel="noopener" style="text-decoration:none">Buka di Drive</a>
           <button class="btn btn-g btn-sm" onclick="suratBaru()">Surat baru</button>
         </div>
@@ -746,13 +789,13 @@ const AGAMA = [['','Pilih'],['1','Islam'],['2','Kristen'],['3','Katolik'],['4','
 const ALAMAT = [['ALAMAT','Alamat / dusun','c2',20],['RT','RT'],['RW','RW'],['DESA','Desa/kelurahan'],['KEC','Kecamatan'],['KAB','Kabupaten/kota'],['PROV','Provinsi']];
 // [key, label, kelas, maks, opsi, tipe]  ; key diawali '!' = tanpa prefix
 const PERSON = {
-  J_: { hero:true, ph:'Nama / NIK / No. KK almarhum', fields:[
+  J_: { hero:true, ph:'Nama, NIK, atau No. KK', fields:[
         ['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],
         ['TGL_LAHIR','Tanggal lahir (sesuai KK)'],['TEMPAT_LAHIR','Tempat lahir','',31],['AGAMA','Agama','',0,AGAMA],['UMUR','Umur (kosong = otomatis)'],
         ['PEKERJAAN','Pekerjaan','c2',31],['!NAMA_KK','Nama kepala keluarga','',31],['!NO_KK','Nomor KK'], ...ALAMAT] },
-  A_: { ph:'Cari ayah: nama atau NIK', fields:[['NAMA','Nama lengkap','c4',31],['NIK','NIK','c2'],['TGL_LAHIR','Tgl lahir (sesuai KK)'],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c4',31], ...ALAMAT] },
-  I_: { ph:'Cari ibu: nama atau NIK', fields:[['NAMA','Nama lengkap','c4',31],['NIK','NIK','c2'],['TGL_LAHIR','Tgl lahir (sesuai KK)'],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c4',31], ...ALAMAT] },
-  P_: { ph:'Cari pelapor: nama atau NIK', fields:[['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],['TGL_LAHIR','Tgl lahir (sesuai KK)'],['UMUR','Umur (kosong = otomatis)'],['PEKERJAAN','Pekerjaan','c2',31], ...ALAMAT] },
+  A_: { ph:'Cari ayah: nama atau NIK', fields:[['NAMA','Nama lengkap','c4',31],['NIK','NIK','c2'],['TGL_LAHIR','Tanggal lahir (sesuai KK)'],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c4',31], ...ALAMAT] },
+  I_: { ph:'Cari ibu: nama atau NIK', fields:[['NAMA','Nama lengkap','c4',31],['NIK','NIK','c2'],['TGL_LAHIR','Tanggal lahir (sesuai KK)'],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c4',31], ...ALAMAT] },
+  P_: { ph:'Cari pelapor: nama atau NIK', fields:[['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],['TGL_LAHIR','Tanggal lahir (sesuai KK)'],['UMUR','Umur (kosong = otomatis)'],['PEKERJAAN','Pekerjaan','c2',31], ...ALAMAT] },
   S1_:{ ph:'Cari saksi I: nama atau NIK', fields:[['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c2',31], ...ALAMAT] },
   S2_:{ ph:'Cari saksi II: nama atau NIK', fields:[['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],['UMUR','Umur'],['PEKERJAAN','Pekerjaan','c2',31], ...ALAMAT] },
 };
@@ -789,15 +832,57 @@ function markOver(el){
 }
 function store(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 function load(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
-function run(fn, ...args){
-  return new Promise((ok, no) => google.script.run.withSuccessHandler(ok).withFailureHandler(e => no(errRamah(e)))[fn](...args));
+/* ---------- panggilan server: batas waktu, ulang otomatis, indikator proses ----------
+ * google.script.run tidak punya batas waktu: bila sinyal putus, janjinya bisa menggantung selamanya
+ * (aplikasi terlihat "macet"). Di sini setiap panggilan diberi batas waktu, dan panggilan baca-saja
+ * diulang sekali secara otomatis bila gagal karena jaringan.
+ */
+const HANYA_BACA = ['getDashboard','getInit','cariWarga','anggotaKK','cariOrangTua','cekSuratNik','detailJenazah',
+  'getRiwayatList','getRiwayatDetail','getFlyerInit','cekSesi'];
+const SENTUH = window.matchMedia && matchMedia('(pointer:coarse)').matches;   // HP/tablet: jangan buka keyboard otomatis
+let SIBUK = 0, LAMBAT_T = null;
+function sibuk(d){
+  SIBUK = Math.max(0, SIBUK + d);
+  document.body.classList.toggle('sibuk', SIBUK > 0);
+  if (SIBUK && !LAMBAT_T) LAMBAT_T = setTimeout(() => { if (SIBUK) toast('Server sedang lambat. Mohon tunggu, jangan tutup aplikasi.'); }, 9000);
+  if (!SIBUK) { clearTimeout(LAMBAT_T); LAMBAT_T = null; }
+}
+function run1(fn, args, ms){
+  return new Promise((ok, no) => {
+    let beres = false;
+    const t = setTimeout(() => { if (!beres) { beres = true; no(new Error('WAKTU_HABIS')); } }, ms);
+    google.script.run
+      .withSuccessHandler(r => { if (!beres) { beres = true; clearTimeout(t); ok(r); } })
+      .withFailureHandler(e => { if (!beres) { beres = true; clearTimeout(t); no(e); } })[fn](...args);
+  });
+}
+async function run(fn, ...args){
+  const ms = fn === 'generateSuratKematian' ? 240000 : 45000;
+  sibuk(1);
+  try {
+    try { return await run1(fn, args, ms); }
+    catch (e) {
+      const m = String((e && e.message) || e || '');
+      if (HANYA_BACA.includes(fn) && /WAKTU_HABIS|network|NetworkError|failed to fetch|jaringan/i.test(m)) return await run1(fn, args, ms);
+      throw e;
+    }
+  } catch (e) { throw errRamah(e); }
+  finally { sibuk(-1); }
 }
 function errRamah(e){
   const m = String((e && e.message) || e || '');
+  if (/WAKTU_HABIS/.test(m)) return new Error('Server tidak menjawab. Periksa sinyal internet, lalu coba lagi.');
   if (/network|jaringan|failed to fetch|NetworkError/i.test(m)) return new Error('Koneksi internet terputus. Periksa jaringan, lalu coba lagi.');
-  if (/authoriz|izin|permission|PERMISSION_DENIED/i.test(m)) return new Error('Akun ini belum punya izin. Minta admin membuka akses web app dan database.');
+  if (/authoriz|izin|permission|PERMISSION_DENIED/i.test(m)) return new Error('Akun ini belum memiliki izin. Minta pengelola membuka akses aplikasi web dan basis data.');
   if (/timed out|Exceeded maximum execution/i.test(m)) return new Error('Server terlalu lama merespons. Coba lagi sebentar lagi.');
   return new Error(m.replace(/^Exception:\s*/, '') || 'Terjadi kesalahan yang tidak dikenal.');
+}
+function fokus(id){ if (!SENTUH && $(id)) $(id).focus(); }
+/** Beri tahu cangkang PWA bahwa halaman sudah tampil (agar layar pembuka ditutup). */
+let SUDAH_SIAP = false;
+function kabariSiap(){
+  if (SUDAH_SIAP) return; SUDAH_SIAP = true;
+  try { window.top.postMessage({ skk: 'siap' }, '*'); } catch (e) {}
 }
 
 /* ======================================================== RENDER PERSON */
@@ -818,7 +903,7 @@ function renderPerson(p){
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input class="in" id="q_${p}" placeholder="${cfg.ph}" autocomplete="off" aria-label="${cfg.ph}">
       </div>
-      <div class="search-row"><span>Bukan warga Merden atau tidak ketemu?</span><button class="btn btn-g btn-sm" type="button" onclick="manualDari('${p}')">Isi manual</button></div>
+      <div class="search-row"><span>Bukan warga Merden atau tidak ditemukan?</span><button class="btn btn-g btn-sm" type="button" onclick="manualDari('${p}')">Isi manual</button></div>
       <div class="results" id="r_${p}" role="listbox"></div>
     </div>
     <div class="p-card">
@@ -957,7 +1042,7 @@ async function cari(p){
     if (list.length === 1 && /^\d{16}$/.test(digits) && list[0].NIK === digits) { box.innerHTML = ''; pilih(p, list[0]); return; }
     if (!list.length) {
       const apa = /^\d{16}$/.test(digits) ? 'NIK ' + digits : '"' + q + '"';
-      box.innerHTML = `<div class="res-msg">${esc(apa)} tidak ada di database.
+      box.innerHTML = `<div class="res-msg">${esc(apa)} tidak ada di basis data.
         <div style="margin-top:8px"><button class="btn btn-p btn-sm" type="button" onclick="manualDari('${p}')">Isi manual dengan ${/^\d{16}$/.test(digits) ? 'NIK' : 'nama'} ini</button></div></div>`;
       return;
     }
@@ -1004,24 +1089,31 @@ function pilih(p, r){
   isiOrang(p, r);
   if (p !== 'J_') return;
   setVal('NAMA_KK', r.NAMA_KEPALA); setVal('NO_KK', r.NO_KK);
-  if (r.NIK) runA('cekSuratNik', r.NIK).then(list => {
-    if (!list.length || val('J_NIK') !== r.NIK) return;
-    $('tg_J_').innerHTML = `<span class="tag warn">Sudah pernah dibuatkan surat: ${list.map(x => esc(x.nomor)).join(', ')}</span>`;
-  }).catch(() => {});
   ['A_','I_'].forEach(x => { kosongkan(x); setMode(x, 'empty'); });
-  if (r.AYAH) cariOrtu('A_', r.AYAH, r.TGL_LAHIR);
-  if (r.IBU) cariOrtu('I_', r.IBU, r.TGL_LAHIR);
+  [['A_', r.AYAH], ['I_', r.IBU]].forEach(([p, nm]) => {
+    if (!nm) return;
+    setVal(fid(p,'NAMA'), nm); setMode(p, 'filled');
+    $('tg_' + p).innerHTML = '<span class="tag warn">Mencari di basis data…</span>';
+  });
   FAM = []; renderFam();
-  if (r.NO_KK) runA('anggotaKK', r.NO_KK).then(list => { FAM = list.filter(x => x.NIK !== r.NIK); renderFam(); }).catch(() => {});
-  $('J_TGL_MATI').focus();
+  // satu panggilan server untuk: surat ganda, anggota KK, ayah, ibu
+  runA('detailJenazah', { nik: r.NIK, noKK: r.NO_KK, ayah: r.AYAH, ibu: r.IBU, tglLahir: r.TGL_LAHIR }).then(x => {
+    if (val('J_NIK') !== r.NIK) return;            // jenazah sudah diganti
+    if (x.surat && x.surat.length) $('tg_J_').innerHTML = `<span class="tag warn">Sudah pernah dibuatkan surat: ${x.surat.map(s => esc(s.nomor)).join(', ')}</span>`;
+    FAM = x.keluarga || []; renderFam();
+    if (r.AYAH) terapkanOrtu('A_', r.AYAH, x.ayah);
+    if (r.IBU) terapkanOrtu('I_', r.IBU, x.ibu);
+    simpanDrafNanti();
+  }).catch(() => { ['A_','I_'].forEach(p => { if ($('tg_' + p)) $('tg_' + p).innerHTML = ''; }); });
+  fokus('J_TGL_MATI');
 }
 
-async function cariOrtu(p, nama, tglAnak){
-  setVal(fid(p,'NAMA'), nama); setMode(p, 'filled');
-  $('tg_' + p).innerHTML = '<span class="tag warn">Mencari di database…</span>';
+function terapkanOrtu(p, nama, r){
+  if (val(fid(p,'NAMA')) !== nama || !r) { if (!r) $('tg_' + p).innerHTML = ''; return; }   // sudah diganti petugas
+  terapkanOrtu_(p, nama, r);
+}
+function terapkanOrtu_(p, nama, r){
   try {
-    const r = await runA('cariOrangTua', nama, p, tglAnak);
-    if (val(fid(p,'NAMA')) !== nama) return;     // sudah diganti petugas
     if (r.cocok.length === 1) {
       isiOrang(p, r.cocok[0]);
       $('tg_' + p).innerHTML = '<span class="tag ok">Cocok dengan data warga. Periksa kembali.</span>';
@@ -1031,7 +1123,7 @@ async function cariOrtu(p, nama, tglAnak){
       $('sg_' + p).innerHTML = `<div class="results" id="sgl_${p}"></div>`;
       tampilHasil(p, list, `Ada ${list.length} warga bernama ${nama}. Pilih jika salah satunya ${p === 'A_' ? 'ayah' : 'ibu'} almarhum:`, 'sgl_' + p);
     } else {
-      $('tg_' + p).innerHTML = '<span class="tag warn">Hanya nama dari KK. Data lain tidak ada di database.</span>';
+      $('tg_' + p).innerHTML = '<span class="tag warn">Hanya nama dari KK. Data lain tidak ada di basis data.</span>';
     }
   } catch (e) { $('tg_' + p).innerHTML = ''; }
 }
@@ -1041,7 +1133,7 @@ function renderFam(){
   const box = $('fam');
   if (!FAM.length) { box.hidden = true; box.innerHTML = ''; return; }
   box.hidden = false;
-  box.innerHTML = `<p>Anggota keluarga dalam KK yang sama. Klik untuk menjadikan pelapor atau saksi.</p>` + FAM.map((r, i) => `
+  box.innerHTML = `<p>Anggota keluarga dalam KK yang sama. Ketuk untuk menjadikan pelapor atau saksi.</p>` + FAM.map((r, i) => `
     <div class="fam-row"><div class="nm">${esc(r.NAMA)}<small>${esc(cap(r.HUBUNGAN))}, ${esc(umur(r.TGL_LAHIR))} tahun</small></div>
       <div class="btns">${['P_','S1_','S2_'].map(p => `<button class="btn btn-g btn-sm" type="button" onclick="pakaiKeluarga(${i},'${p}')">${LABEL[p]}</button>`).join('')}</div></div>`).join('');
 }
@@ -1076,10 +1168,10 @@ function refreshAll(){
   const kurang = kurangWajib();
   // Setelah surat jadi, kunci tombol agar tidak terbit surat ganda; lanjut lewat "Surat baru"
   $('btnGen').disabled = !siap || SELESAI;
-  $('btnGen').querySelector('.lbl-gen').textContent = SELESAI ? 'Surat sudah dibuat' : (siap ? 'Buat file Excel' : 'Lengkapi: ' + kurang.map(k => k[0]).join(', '));
+  $('btnGen').querySelector('.lbl-gen').textContent = SELESAI ? 'Surat sudah dibuat' : (siap ? 'Buat berkas Excel' : 'Lengkapi: ' + kurang.map(k => k[0]).join(', '));
   $('btnGenM').disabled = false;
   $('mBtnTxt').textContent = SELESAI ? 'Surat baru' : (siap ? 'Buat Excel' : 'Lengkapi');
-  $('mStatus').textContent = SELESAI ? 'Selesai, file tersimpan' : (siap ? 'Siap dibuat' : 'Belum diisi: ' + kurang.map(k => k[0].toLowerCase()).join(', '));
+  $('mStatus').textContent = SELESAI ? 'Selesai, berkas tersimpan' : (siap ? 'Siap dibuat' : 'Belum diisi: ' + kurang.map(k => k[0].toLowerCase()).join(', '));
   $('mStatus').parentElement.classList.toggle('kurang', !SELESAI && !siap);
   const done = { 1: !!nama, 2: !!val('J_TGL_MATI'), 3: !!(val('A_NAMA') && val('I_NAMA')), 4: !!val('P_NAMA'), 5: SELESAI };
   [1, 2, 3, 4, 5].forEach(n => $('st' + n).classList.toggle('done', done[n]));
@@ -1088,6 +1180,7 @@ function refreshAll(){
     b.classList.toggle('ok', done[n]);
     b.classList.toggle('need', !done[n] && kurang.some(k => k[1] === n) && !!nama);
   });
+  if (typeof simpanDrafNanti === 'function') simpanDrafNanti();   // semua perubahan isian ikut tersimpan
 }
 
 /** Isian wajib yang belum ada: [label, nomor langkah, id fokus] */
@@ -1106,7 +1199,7 @@ function keLangkah(n, fokusId){
 function keKurang(){
   const k = kurangWajib()[0];
   if (!k) return;
-  toast('Isi dulu: ' + k[0].toLowerCase());
+  toast('Isi terlebih dahulu: ' + k[0].toLowerCase());
   keLangkah(k[1], k[2]);
 }
 function aksiMbar(){
@@ -1150,6 +1243,7 @@ function status(t, err){ const s = $('status'); s.textContent = t; s.className =
 
 async function generate(){
   if ($('btnGen').disabled) return;
+  if (!INIT) { status('Data awal formulir belum termuat. Memuat ulang…', true); loadInit(); return; }
   // simpan isian yang sedang diedit
   Object.keys(PERSON).forEach(p => { if ($('person-' + p).dataset.mode === 'edit') selesaiEdit(p); });
   const d = { TGL_SURAT_ISO: val('TGL_SURAT_ISO'), NO_URUT: val('NO_URUT'), NO_MANUAL: noManual && !!val('NO_URUT') };
@@ -1159,18 +1253,25 @@ async function generate(){
     d[el.id] = (el.type === 'date' || el.type === 'time') ? el.value : el.value.trim().toUpperCase();
   });
   d.J_SEBAB = radio('sebab'); d.J_MENERANGKAN = radio('menerangkan');
-  setBusy(true); status('Membuat file Excel…'); $('doneBox').classList.remove('show'); $('warns').innerHTML = '';
+  setBusy(true); status('Membuat berkas Excel…'); $('doneBox').classList.remove('show'); $('warns').innerHTML = '';
   try {
     const r = await runA('generateSuratKematian', d);
     LAST = r; SELESAI = true; unduh(r.base64, r.nama);
     $('doneText').textContent = 'Surat ' + r.nomor + ' selesai';
     $('driveLink').href = r.url; $('doneBox').classList.add('show');
     $('warns').innerHTML = r.peringatan.map(w => `<li>${esc(w)}</li>`).join('');
-    status(''); $('mStatus').textContent = 'Selesai, file terunduh';
+    status(''); $('mStatus').textContent = 'Selesai, berkas terunduh';
     INIT.nomorBerikut = r.nomorBerikut; noManual = false; setVal('NO_URUT', '');
-    renderHist(r.riwayat); DASH_BASI = true; RW_BASI = true;
+    renderHist(r.riwayat); DASH_BASI = true; RW_BASI = true; hapusDraf();
+    toast('Surat ' + r.nomor + ' selesai dibuat');
     if (window.matchMedia('(max-width:980px)').matches) $('doneBox').scrollIntoView({behavior:'smooth', block:'center'});
-  } catch (e) { status('Gagal membuat surat: ' + e.message, true); }
+  } catch (e) {
+    const habis = /tidak menjawab|terputus/i.test(e.message);
+    status(habis
+      ? 'Belum ada jawaban dari server. Surat mungkin sudah terbit: buka menu Riwayat dulu sebelum membuat ulang, agar nomor tidak ganda.'
+      : 'Gagal membuat surat: ' + e.message, true);
+    RW_BASI = true;
+  }
   setBusy(false);
 }
 
@@ -1189,7 +1290,7 @@ function suratBaru(){
   chipGroup('chSebab', 'sebab', SEBAB, '1'); chipGroup('chMenerangkan', 'menerangkan', MENERANGKAN, '4');
   FAM = []; renderFam(); LAST = null; SELESAI = false;
   $('doneBox').classList.remove('show'); $('warns').innerHTML = ''; status('');
-  refreshAll(); window.scrollTo({top:0, behavior:'smooth'}); $('q_J_').focus();
+  hapusDraf(); refreshAll(); window.scrollTo({top:0, behavior:'smooth'}); fokus('q_J_');
 }
 
 /* ======================================================== INIT */
@@ -1204,11 +1305,13 @@ document.addEventListener('input', e => {
   if (/^(J_|A_|I_|P_)TGL_LAHIR$/.test(t.id)) maskTgl(t);
   if (t.id === 'NO_KK') { const d = t.value.replace(/\D/g, '').slice(0, 16); if (d !== t.value) t.value = d; }
   refreshAll();
+  if (t.closest && t.closest('#viewForm')) simpanDrafNanti();
 });
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.classList && t.classList.contains('up')) t.value = t.value.replace(/\s+/g, ' ').trim().toUpperCase();
   refreshAll();
+  if (t.closest && t.closest('#viewForm')) simpanDrafNanti();
 });
 $('NO_URUT').addEventListener('input', e => {
   const d = e.target.value.replace(/\D/g, '').slice(0, 4);
@@ -1242,8 +1345,10 @@ window.addEventListener('beforeunload', e => {
 
 /* ======================================================== SESI & NAVIGASI */
 let TOKEN = null, PETUGAS = '', DASH_BASI = true, DASH = null;
-function simpanToken(t){ try { t ? sessionStorage.setItem('skk_tok', t) : sessionStorage.removeItem('skk_tok'); } catch(e){} }
-function ambilToken(){ try { return sessionStorage.getItem('skk_tok'); } catch(e){ return null; } }
+// Token disimpan di localStorage agar sesi tidak hilang saat Android menutup aplikasi di latar belakang.
+// Server tetap mengakhiri sesi setelah 6 jam tidak dipakai, dan tombol Keluar menghapusnya.
+function simpanToken(t){ try { t ? localStorage.setItem('skk_tok', t) : localStorage.removeItem('skk_tok'); sessionStorage.removeItem('skk_tok'); } catch(e){} }
+function ambilToken(){ try { return localStorage.getItem('skk_tok') || sessionStorage.getItem('skk_tok'); } catch(e){ return null; } }
 
 /** Panggilan server yang butuh login admin. */
 function runA(fn, ...args){
@@ -1255,11 +1360,11 @@ function runA(fn, ...args){
 
 function aturMasuk(token, nama){
   TOKEN = token; PETUGAS = nama || ''; simpanToken(token);
-  $('whoTop').hidden = !token; $('whoNama').textContent = token ? cap(PETUGAS) : '';
+  $('whoTop').hidden = !token; $('whoNama').textContent = token ? 'Petugas' : '';
   $('btnMasuk').hidden = !!token;
   document.body.classList.toggle('masuk', !!token);
 }
-function masukDariHeader(){ TUJUAN = 'form'; bukaLogin('Masuk untuk membuat surat, melihat riwayat, dan membuat flyer.'); }
+function masukDariHeader(){ TUJUAN = 'form'; bukaLogin('Masuk untuk membuat surat, melihat riwayat, dan membuat kartu duka.'); }
 
 function showView(v){
   document.body.dataset.view = v;
@@ -1268,7 +1373,7 @@ function showView(v){
   $('nvRiwayat').setAttribute('aria-current', v === 'riwayat' ? 'page' : 'false');
   window.scrollTo(0, 0);
   if (v === 'dash' && DASH_BASI) loadDash($('dTahun').value);
-  if (v === 'form') { if (!INIT) loadInit(); else setTimeout(() => { if (!val('J_NAMA')) $('q_J_').focus(); }, 50); }
+  if (v === 'form') { if (!INIT) loadInit(); else setTimeout(() => { if (!val('J_NAMA')) fokus('q_J_'); }, 50); }
   if (v === 'riwayat' && (RW_BASI || !RW)) loadRiwayat($('rwTahun').value || '');
 }
 
@@ -1282,7 +1387,7 @@ function bukaLogin(info){
   $('lgInfo').textContent = info || 'Pembuatan surat hanya untuk petugas desa.';
   $('lgErr').textContent = ''; $('lgPw').value = '';
   $('loginOvl').hidden = false;
-  setTimeout(() => $('lgPw').focus(), 30);
+  setTimeout(() => $('lgPw').focus(), 60);
 }
 function tutupLogin(){ $('loginOvl').hidden = true; }
 function lihatPw(b){ const i = $('lgPw'); i.type = i.type === 'password' ? 'text' : 'password'; b.textContent = i.type === 'password' ? 'Lihat' : 'Tutup'; }
@@ -1290,12 +1395,12 @@ function lihatPw(b){ const i = $('lgPw'); i.type = i.type === 'password' ? 'text
 async function doLogin(e){
   e.preventDefault();
   const pw = $('lgPw').value;
-  if (!pw) { $('lgErr').textContent = 'Ketik password.'; $('lgPw').focus(); return false; }
+  if (!pw) { $('lgErr').textContent = 'Ketik kata sandi.'; $('lgPw').focus(); return false; }
   $('lgBtn').classList.add('busy'); $('lgBtn').disabled = true; $('lgErr').textContent = '';
   try {
     const r = await run('login', pw);
     aturMasuk(r.token, r.nama); tutupLogin(); showView(TUJUAN || 'form');
-    toast('Berhasil masuk sebagai ' + cap(r.nama));
+    toast('Berhasil masuk. Selamat bekerja.');
   } catch (err) { $('lgErr').textContent = err.message; $('lgPw').select(); }
   $('lgBtn').classList.remove('busy'); $('lgBtn').disabled = false;
   return false;
@@ -1303,23 +1408,76 @@ async function doLogin(e){
 
 async function keluar(){
   if (!SELESAI && (val('J_NAMA') || val('P_NAMA')) && !confirm('Isian surat yang belum dibuat akan hilang. Keluar sekarang?')) return;
-  const t = TOKEN; aturMasuk(null);
+  const t = TOKEN; aturMasuk(null); hapusDraf();
   Object.keys(PERSON).forEach(p => { kosongkan(p); setMode(p, 'empty'); });
   INIT = null; SELESAI = false; RW = null; RW_SEL = null; $('rwList').innerHTML = ''; $('rwDetail').innerHTML = ''; showView('dash');
   toast('Anda sudah keluar');
   try { await run('logout', t); } catch(e){}
 }
 
+let INIT_JALAN = false;
 function loadInit(){
-  status('Memuat…');
+  if (INIT_JALAN) return;
+  INIT_JALAN = true; $('formErr').hidden = true;
+  status('Memuat data formulir…'); $('nomorView').textContent = 'Memuat nomor…';
   runA('getInit').then(init => {
     INIT = init; status('');
-    $('TGL_SURAT_ISO').value = init.hariIni;
+    if (!val('TGL_SURAT_ISO')) $('TGL_SURAT_ISO').value = init.hariIni;
     $('ttd').innerHTML = init.penandatangan.map((p, i) => `<option value="${i}">${esc(cap(p.nama))}, ${esc(cap(p.jabatan.replace(/\s+MERDEN$/, '')))}${p.an ? ' (a.n.)' : ''}</option>`).join('');
     const t = load('skk_ttd'); if (t !== null && init.penandatangan[+t]) $('ttd').value = t;
-    renderHist(init.riwayat); refreshAll(); $('q_J_').focus();
-  }).catch(e => { status('Gagal memuat: ' + e.message, true); $('hist').innerHTML = ''; });
+    renderHist(init.riwayat); refreshAll(); tawarkanDraf();
+    if (!val('J_NAMA')) fokus('q_J_');
+  }).catch(e => {
+    status('Gagal memuat: ' + e.message, true); $('hist').innerHTML = '';
+    $('formErrTx').textContent = 'Data formulir (nomor surat dan penanda tangan) gagal dimuat. ' + e.message;
+    $('formErr').hidden = false;
+  }).finally(() => { INIT_JALAN = false; });
 }
+
+/* ======================================================== DRAF OTOMATIS
+ * Isian yang belum jadi surat disimpan di perangkat ini (maks. 24 jam), agar tidak hilang bila
+ * aplikasi tertutup, sinyal putus, atau HP mati. Dihapus saat surat dibuat, "Surat baru", atau Keluar.
+ */
+var DRAF = 'skk_draf';   // var: aman dipanggil refreshAll sebelum baris ini dijalankan
+var DRAF_T = null;
+function simpanDrafNanti(){ clearTimeout(DRAF_T); DRAF_T = setTimeout(simpanDraf, 700); }
+function simpanDraf(){
+  if (!TOKEN || SELESAI) return;
+  const v = {};
+  document.querySelectorAll('#viewForm [data-k]').forEach(el => { if (el.value) v[el.id] = el.value; });
+  if (!v.J_NAMA && !v.P_NAMA) return;
+  const man = {};
+  Object.keys(PERSON).forEach(p => { man[p] = $('person-' + p).dataset.manual || ''; });
+  store(DRAF, JSON.stringify({ t: Date.now(), v: v, man: man, sebab: radio('sebab'), terang: radio('menerangkan') }));
+}
+function bacaDraf(){
+  try { const d = JSON.parse(load(DRAF) || 'null'); return d && Date.now() - d.t < 864e5 ? d : null; } catch (e) { return null; }
+}
+function hapusDraf(){ clearTimeout(DRAF_T); try { localStorage.removeItem(DRAF); } catch (e) {} if ($('drafBox')) $('drafBox').hidden = true; }
+function tawarkanDraf(){
+  const d = bacaDraf();
+  if (!d || val('J_NAMA') || val('P_NAMA')) return;
+  const jam = new Date(d.t), hh = String(jam.getHours()).padStart(2, '0') + '.' + String(jam.getMinutes()).padStart(2, '0');
+  $('drafTx').innerHTML = `Ada isian surat yang belum selesai${d.v.J_NAMA ? ' untuk <b>' + esc(d.v.J_NAMA) + '</b>' : ''}, tersimpan pukul ${hh}.`;
+  $('drafBox').hidden = false;
+}
+function pulihkanDraf(){
+  const d = bacaDraf(); $('drafBox').hidden = true;
+  if (!d) return;
+  Object.keys(d.v).forEach(id => setVal(id, d.v[id]));
+  ['sebab', 'menerangkan'].forEach((n, i) => {
+    const v = i ? d.terang : d.sebab, r = v && document.querySelector(`input[name="${n}"][value="${v}"]`);
+    if (r) r.checked = true;
+  });
+  Object.keys(PERSON).forEach(p => {
+    $('person-' + p).dataset.manual = (d.man && d.man[p]) || '';
+    setMode(p, val(fid(p, 'NAMA')) ? 'filled' : 'empty');
+  });
+  refreshAll(); toast('Isian dipulihkan. Periksa kembali sebelum membuat surat.');
+  const kk = val('NO_KK'), nik = val('J_NIK');                  // muat ulang daftar anggota keluarga
+  if (kk) runA('anggotaKK', kk).then(l => { FAM = l.filter(x => x.NIK !== nik); renderFam(); }).catch(() => {});
+}
+function buangDraf(){ hapusDraf(); toast('Isian lama dibuang'); }
 
 /* ======================================================== DASHBOARD */
 const fmtN = n => n == null ? '—' : Number(n).toLocaleString('id-ID');
@@ -1356,7 +1514,7 @@ function hBars(items, unit){
 }
 
 function renderDash(d){
-  DASH = d; DASH_BASI = false;
+  DASH = d; DASH_BASI = false; kabariSiap();
   const sel = $('dTahun');
   sel.innerHTML = d.tahunList.map(t => `<option ${t === d.tahun ? 'selected' : ''}>${t}</option>`).join('');
   const r = d.ringkas, bln = d.bulanLabel[new Date().getMonth()];
@@ -1394,11 +1552,21 @@ function renderDash(d){
   $('dUpd').textContent = 'Diperbarui ' + d.diperbarui;
 }
 
+/* Beranda tampil seketika dari salinan terakhir di perangkat, lalu diperbarui diam-diam dari server. */
 function loadDash(tahun){
-  const keep = DASH && String(DASH.tahun) === String(tahun || '');
-  if (!keep) ['cTren','cDusun','cUmur','cJk','cSebab','cPend','cBaru'].forEach(id => { if (!DASH) $(id).innerHTML = '<div class="sk" style="height:180px"></div>'; });
-  run('getDashboard', tahun || null).then(renderDash)
-    .catch(e => { $('dTiles').innerHTML = `<div class="tile" style="grid-column:1/-1"><div class="k">Dashboard belum bisa dimuat</div><div class="s">${esc(e.message)}</div></div>`; });
+  const kunci = 'skk_dash_' + (tahun || 'ini');
+  if (!DASH || (tahun && String(DASH.tahun) !== String(tahun))) {
+    try { const c = JSON.parse(load(kunci) || 'null'); if (c) { renderDash(c); DASH_BASI = true; } } catch (e) {}
+  }
+  if (!DASH) ['cTren','cDusun','cUmur','cJk','cSebab','cPend','cBaru'].forEach(id => { $(id).innerHTML = '<div class="sk" style="height:180px"></div>'; });
+  $('dErr').hidden = true;
+  run('getDashboard', tahun || null).then(d => { renderDash(d); store(kunci, JSON.stringify(d)); })
+    .catch(e => {
+      kabariSiap();
+      $('dErrTx').textContent = (DASH ? 'Angka di bawah belum diperbarui. ' : 'Beranda belum bisa dimuat. ') + e.message;
+      $('dErr').hidden = false;
+      if (!DASH) ['dTiles','cTren','cDusun','cUmur','cJk','cSebab','cPend','cBaru'].forEach(id => { $(id).innerHTML = ''; });
+    });
 }
 
 // Tooltip untuk grafik (mouse, keyboard, sentuh)
@@ -1446,7 +1614,7 @@ function renderRiwayatList(){
       <span class="mt">Meninggal ${esc(x.tglMati || '—')}${x.dusun ? ', ' + esc(x.dusun) : ''}${x.pelapor ? ', pelapor ' + esc(cap(x.pelapor)) : ''}</span>
     </button>
     <button class="btn btn-g btn-sm rw-flyer" type="button" onclick="flyerDariRiwayat(${x.row}, this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Buat Flyer WA</button>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Kartu duka</button>
   </div>`).join('');
 }
 
@@ -1454,8 +1622,8 @@ function flyerSiap(){
   if (typeof bukaFlyer === 'function') return true;
   const ada = !!document.getElementById('viewFlyer');
   alert(ada
-    ? 'Kode flyer gagal dijalankan di browser.\nGalat: ' + (window.FLYER_ERR || 'tidak diketahui') + '\nKirim pesan ini ke pembuat aplikasi.'
-    : 'File Flyer tidak tersisip ke halaman.\nPeriksa: (1) ada file HTML bernama persis "Flyer" di proyek, (2) baris HtmlService.createHtmlOutputFromFile(Flyer) masih ada di akhir Index.html, (3) sudah Deploy > Versi baru.');
+    ? 'Kode kartu duka gagal dijalankan di peramban.\nGalat: ' + (window.FLYER_ERR || 'tidak diketahui') + '\nKirim pesan ini kepada pembuat aplikasi.'
+    : 'Berkas Flyer tidak tersisip ke halaman.\nPeriksa: (1) ada file HTML bernama persis "Flyer" di proyek, (2) baris HtmlService.createHtmlOutputFromFile(Flyer) masih ada di akhir Index.html, (3) sudah Deploy > Versi baru.');
   return false;
 }
 
@@ -1519,11 +1687,11 @@ function renderDetail(x){
     <div class="dt-head">
       <button class="btn btn-g btn-sm dt-back" type="button" onclick="tutupDetail()">Kembali</button>
       <div><div class="no">${esc(x.nomor)}</div><div class="sub">Tanggal surat ${esc(x.tglSurat)}</div></div>
-      <div class="act">${x.url ? `<a class="btn btn-g btn-sm" href="${esc(x.url)}" target="_blank" rel="noopener" style="text-decoration:none">Buka file</a>` : ''}</div>
+      <div class="act">${x.url ? `<a class="btn btn-g btn-sm" href="${esc(x.url)}" target="_blank" rel="noopener" style="text-decoration:none">Buka berkas</a>` : ''}</div>
     </div>
     <div class="dt-sec"><h4>Jenazah</h4>${dl([
       ['Nama', x.nama], ['NIK', x.nik, 'tab'], ['Jenis kelamin', jk], ['Umur', umur ? umur + ' tahun' : ''],
-      ['Tempat, tgl lahir', ttl], ['Agama', d ? L_AGAMA[d.J_AGAMA] || '' : ''], ['Pekerjaan', d ? cap(d.J_PEKERJAAN) : ''],
+      ['Tempat, tanggal lahir', ttl], ['Agama', d ? L_AGAMA[d.J_AGAMA] || '' : ''], ['Pekerjaan', d ? cap(d.J_PEKERJAAN) : ''],
       ['Alamat', d ? alamatDari(d, 'J_') : [x.rt || x.rw ? `RT ${x.rt}/RW ${x.rw}` : '', x.dusun].filter(Boolean).join(', ')],
       ['No. KK', d ? d.NO_KK : '', 'tab'], ['Kepala keluarga', d ? cap(d.NAMA_KK) : '']])}</div>
     <div class="dt-sec"><h4>Kematian</h4>${dl([
@@ -1533,13 +1701,13 @@ function renderDetail(x){
     <div class="dt-sec"><h4>Pelapor dan saksi</h4>${dl([
       ['Pelapor', d ? orang(d, 'P_') : cap(x.pelapor)], ['Saksi I', d ? orang(d, 'S1_') : ''], ['Saksi II', d ? orang(d, 'S2_') : '']])}</div>
     <div class="dt-sec"><h4>Surat</h4>${dl([
-      ['Penandatangan', d ? [d.TTD_ATAS_NAMA, cap(d.TTD_JABATAN), cap(d.TTD_NAMA)].filter(Boolean).join(', ') : cap(x.ttd)],
+      ['Penanda tangan', d ? [d.TTD_ATAS_NAMA, cap(d.TTD_JABATAN), cap(d.TTD_NAMA)].filter(Boolean).join(', ') : cap(x.ttd)],
       ['Dibuat oleh', x.petugas], ['Waktu dibuat', x.waktu, 'tab']])}
-      ${d ? '' : '<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Surat ini dibuat sebelum fitur Riwayat ada, jadi sebagian detail tidak tersimpan. Detail lengkap ada di file Excel-nya.</p>'}</div>
+      ${d ? '' : '<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Surat ini dibuat sebelum fitur Riwayat ada, jadi sebagian detail tidak tersimpan. Detail lengkap ada di berkas Excel-nya.</p>'}</div>
     <div class="note-box">
       <h4><label for="noteTxt">Catatan</label></h4>
       <div class="note-chips" aria-label="Isi cepat">
-        ${['Surat sudah diambil keluarga', 'Akta kematian sudah terbit', 'Data perlu dicek ulang', 'Sudah dilaporkan ke Dindukcapil'].map(t => `<button type="button" onclick="tambahCatatan('${t}')">${t}</button>`).join('')}
+        ${['Surat sudah diambil keluarga', 'Akta kematian sudah terbit', 'Data perlu dicek ulang', 'Sudah dilaporkan ke Disdukcapil'].map(t => `<button type="button" onclick="tambahCatatan('${t}')">${t}</button>`).join('')}
       </div>
       <textarea id="noteTxt" maxlength="2000" placeholder="Tulis catatan untuk surat ini, misalnya: surat diambil oleh anaknya tanggal …">${esc(x.catatan || '')}</textarea>
       <div class="note-row"><span class="st" id="noteSt">${x.catatanWaktu ? 'Terakhir diubah ' + esc(x.catatanWaktu) : 'Belum ada catatan'}</span>
