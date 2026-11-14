@@ -213,7 +213,7 @@
   .tile.lead .v{color:#fff}
   .dgrid{display:grid;gap:14px;margin-bottom:14px}
   .g2{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
-  .g2.top{align-items:start}
+  .g2.g-top{align-items:start}
   .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px 18px;min-width:0}
   .card-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
@@ -403,20 +403,134 @@
     .letter,.p-sec,.go,.hist{padding-left:16px;padding-right:16px}
     .search.hero .in{font-size:16px;height:52px}
   }
+
+  /* ================= PERBAIKAN UI HP (header akun, langkah, alur) ================= */
+  /* header: merek | menu | akun ; di HP menu turun ke baris kedua */
+  .top-in{gap:10px 14px}
+  .nav{order:2}
+  .akun{order:3;display:flex;align-items:center;flex:none}
+  .akun-in{display:flex;align-items:center;gap:8px}
+  .akun-in[hidden],.akun-btn[hidden]{display:none}
+  .akun-btn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:999px;font:inherit;font-size:14px;font-weight:600;
+    cursor:pointer;white-space:nowrap;border:1.5px solid rgba(255,255,255,.7);background:transparent;color:#fff}
+  .akun-btn:hover{background:rgba(255,255,255,.12)}
+  .akun-btn.masuk{background:#fff;color:var(--nila);border-color:#fff}
+  .akun-btn.masuk:hover{background:#E8EDF5}
+  .akun-btn svg{width:17px;height:17px;flex:none}
+  .akun-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.14);
+    padding:5px 10px;border-radius:999px;white-space:nowrap}
+  .akun-chip i{width:8px;height:8px;border-radius:50%;background:#5BD08F;box-shadow:0 0 0 3px rgba(91,208,143,.25)}
+  .kunci{display:inline-block;width:12px;height:12px;margin-right:5px;vertical-align:-1px;opacity:.75;
+    background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat}
+  body.masuk .kunci{display:none}
+  @media (max-width:860px){
+    .nav{order:4;width:100%;margin-top:0}
+    .nav .nv{flex:1;padding:8px 4px;white-space:nowrap}
+    .brand{flex:1 1 0}
+  }
+  @media (max-width:640px){
+    .top-in{padding:10px 12px 8px}
+    .seal{width:34px;height:34px}
+    .top h1{font-size:15px;line-height:1.25}
+    .top p{font-size:12.5px}
+    .brand{gap:10px}
+    .akun-btn{height:36px;padding:0 12px;font-size:13.5px}
+    .akun-chip{display:none}
+    .nav{gap:2px}
+    .nav .nv{font-size:13.5px;min-height:38px}
+  }
+  @media (max-width:340px){ .top h1{font-size:14px} .brand .seal{display:none} .akun-btn{padding:0 10px} }
+
+  /* login */
+  .login{text-align:left}
+  .lg-ico{width:44px;height:44px;border-radius:12px;background:var(--nila-soft);color:var(--nila);display:grid;place-items:center;margin-bottom:12px}
+  .lg-ico svg{width:22px;height:22px}
+  .login .btn-big{margin-top:2px}
+  .lg-batal{display:flex;width:100%;margin-top:6px;height:42px}
+  .lg-note{margin:10px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45}
+  @media (max-width:640px){ .ovl{align-items:end;padding:0} .login{max-width:none;border-radius:18px 18px 0 0;padding:22px 18px calc(18px + env(safe-area-inset-bottom))} }
+
+  /* toast */
+  #toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-20px);z-index:70;background:var(--ink);color:#fff;font-size:14px;font-weight:500;
+    padding:10px 16px;border-radius:10px;box-shadow:0 8px 24px rgba(24,38,46,.25);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+    max-width:calc(100vw - 32px);text-align:center}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* alur di beranda */
+  .alur{margin-bottom:14px}
+  .alur-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;counter-reset:al}
+  .alur-list li{counter-increment:al;position:relative;padding:10px 12px 12px 46px;border-radius:var(--r-md);background:#F7F9F8;border:1px solid var(--line);font-size:13px;line-height:1.4}
+  .alur-list li::before{content:counter(al);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--nila);color:#fff;
+    font-weight:700;font-size:13px;display:grid;place-items:center}
+  .alur-list b{display:block;font-size:14px;margin-bottom:2px}
+  .alur-list span{color:var(--muted)}
+  @media (max-width:1060px){.alur-list{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.alur-list{grid-template-columns:1fr;gap:0}.alur-list li{background:none;border:0;border-radius:0;border-top:1px solid var(--line);padding:9px 0 9px 36px}.alur-list li:first-child{border-top:0}.alur-list li::before{left:0;top:10px}}
+  body.masuk .alur{display:none}
+
+  /* penunjuk langkah formulir */
+  .stepper{position:sticky;top:0;z-index:15;display:flex;gap:4px;margin:0 0 14px;padding:8px;background:rgba(242,244,243,.94);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:var(--r-md)}
+  .stepper button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;border:0;background:none;
+    font:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px}
+  .stepper button:hover{background:#fff}
+  .stepper i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+    background:#fff;border:1.5px solid var(--line-strong);color:var(--muted)}
+  .stepper span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .stepper .ok i{background:var(--ok);border-color:var(--ok);color:#fff}
+  .stepper .ok{color:var(--ok)}
+  .stepper .need i{border-color:var(--err);color:var(--err)}
+  .stepper .now i{box-shadow:0 0 0 3px var(--nila-soft);border-color:var(--nila)}
+  .stepper .now{color:var(--nila)}
+  .step{scroll-margin-top:84px}
+  .step-desc{margin:6px 20px 0 60px;font-size:13.5px;color:var(--muted);line-height:1.45}
+  @media (max-width:640px){.step-desc{margin:6px 16px 0}.stepper{padding:6px 4px}.stepper button{font-size:11px}}
+  .step-h .req,.step-h .opt,.who h3 .req,.who h3 .opt{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .step-h .req,.step-h .opt{margin-left:auto}
+  .step-h .req,.who h3 .req{background:var(--err-soft);color:var(--err)}
+  .step-h .opt,.who h3 .opt{background:#EEF1F0;color:var(--muted)}
+  #btnGen{white-space:normal;height:auto;min-height:52px;padding:10px 16px;line-height:1.3}
+  .who h3 .req,.who h3 .opt{margin-left:6px;vertical-align:1px}
+  .search-row .btn{height:36px}
+  .panel.step{margin-bottom:0}
+  .panel.step .step-h{padding-top:16px}
+  .panel.step .step-desc{margin-bottom:6px}
+  @media (max-width:640px){.panel.step .step-h{padding-left:16px}}
+
+  /* bilah bawah HP */
+  @media (max-width:980px){
+    .mbar .t{min-width:0}
+    .mbar .t b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mbar .t span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.3}
+    .wrap{grid-template-columns:minmax(0,1fr)}
+    .mbar .t.kurang span{color:var(--err);font-weight:600}
+    .mbar .btn{flex:none;height:44px;padding:0 18px}
+  }
 </style>
 </head>
 <body>
 <header class="top"><div class="top-in">
   <button class="brand" type="button" onclick="keBeranda()" title="Kembali ke Beranda" aria-label="Surat Keterangan Kematian, kembali ke Beranda">
     <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></div>
-    <div><h1>Surat Keterangan Kematian</h1><p>Pemerintah Desa Merden, Kecamatan Purwanegara</p></div>
+    <div><h1>Surat Keterangan Kematian</h1><p><span class="lbl-l">Pemerintah </span>Desa Merden<span class="lbl-l">, Kecamatan Purwanegara</span></p></div>
   </button>
+  <div class="akun">
+    <button class="akun-btn masuk" id="btnMasuk" type="button" onclick="masukDariHeader()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      Masuk<span class="lbl-l">&nbsp;petugas</span></button>
+    <div class="akun-in" id="whoTop" hidden>
+      <span class="akun-chip" title="Anda sedang masuk sebagai petugas"><i aria-hidden="true"></i><span id="whoNama">Admin</span></span>
+      <button class="akun-btn" type="button" onclick="keluar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3M16 17l5-5-5-5M21 12H9"/></svg>
+        Keluar</button>
+    </div>
+  </div>
   <nav class="nav" aria-label="Menu utama">
     <button class="nv" id="nvDash" type="button" onclick="showView('dash')">Beranda</button>
-    <button class="nv" id="nvForm" type="button" onclick="bukaBuatSurat()"><span class="lbl-l">Buat surat</span><span class="lbl-s">Buat</span></button>
-    <button class="nv" id="nvRiwayat" type="button" onclick="bukaRiwayat()">Riwayat</button>
-    <button class="nv" id="nvFlyer" type="button" onclick="flyerSiap() && bukaFlyer('menu')"><span class="lbl-l">Buat Flyer WA</span><span class="lbl-s">Flyer</span></button>
-    <div class="who-top" id="whoTop" hidden><span id="whoNama"></span><button class="nv" type="button" onclick="keluar()">Keluar</button></div>
+    <button class="nv" id="nvForm" type="button" onclick="bukaBuatSurat()"><span class="kunci" aria-hidden="true"></span><span class="lbl-l">Buat surat</span><span class="lbl-s">Buat</span></button>
+    <button class="nv" id="nvRiwayat" type="button" onclick="bukaRiwayat()"><span class="kunci" aria-hidden="true"></span>Riwayat</button>
+    <button class="nv" id="nvFlyer" type="button" onclick="flyerSiap() && bukaFlyer('menu')"><span class="kunci" aria-hidden="true"></span><span class="lbl-l">Buat Flyer WA</span><span class="lbl-s">Flyer</span></button>
   </nav>
 </div></header>
 
@@ -433,6 +547,16 @@
       <button class="btn btn-p" type="button" onclick="bukaBuatSurat()">Buat surat</button>
     </div>
   </div>
+  <section class="card alur" aria-labelledby="alurTitle">
+    <div class="card-h"><div><h3 id="alurTitle">Cara membuat surat (khusus petugas)</h3><p>Lima langkah, kurang lebih 3 menit</p></div></div>
+    <ol class="alur-list">
+      <li><b>Masuk</b><span>Ketuk tombol <em>Masuk</em> di kanan atas, lalu ketik password.</span></li>
+      <li><b>Cari almarhum</b><span>Ketik nama, NIK, atau nomor KK lalu pilih. Data KK dan orang tua terisi otomatis.</span></li>
+      <li><b>Waktu kematian</b><span>Isi tanggal meninggal (wajib), pukul, tempat, dan sebab.</span></li>
+      <li><b>Pelapor dan saksi</b><span>Pelapor wajib. Ketuk anggota keluarga untuk mengisi cepat.</span></li>
+      <li><b>Buat file Excel</b><span>File terunduh dan tersimpan di arsip. Cetak, tanda tangan, cap.</span></li>
+    </ol>
+  </section>
   <div class="tiles" id="dTiles">
     <div class="tile sk" style="height:104px"></div><div class="tile sk" style="height:104px"></div>
     <div class="tile sk" style="height:104px"></div><div class="tile sk" style="height:104px"></div>
@@ -446,7 +570,7 @@
     <div class="card" id="cJk"></div>
     <div class="card" id="cSebab"></div>
   </div>
-  <div class="dgrid g2 top">
+  <div class="dgrid g2 g-top">
     <div class="card" id="cPend"></div>
     <div style="display:grid;gap:14px;min-width:0">
       <div class="card" id="cBaru"></div>
@@ -487,29 +611,42 @@
 <!-- ===================== LOGIN ADMIN ===================== -->
 <div class="ovl" id="loginOvl" hidden role="dialog" aria-modal="true" aria-labelledby="lgTitle">
   <form class="login" onsubmit="return doLogin(event)" autocomplete="on">
-    <h2 id="lgTitle">Masuk admin</h2>
+    <div class="lg-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <h2 id="lgTitle">Masuk petugas desa</h2>
     <p id="lgInfo">Pembuatan surat hanya untuk petugas desa.</p>
     <input type="hidden" id="lgUser" value="admin" autocomplete="username">
-    <div class="fld"><label class="f" for="lgPw">Password</label>
-      <div class="pw"><input class="in" id="lgPw" type="password" required autocomplete="current-password"><button type="button" onclick="lihatPw(this)">Lihat</button></div></div>
+    <div class="fld"><label class="f" for="lgPw">Password petugas</label>
+      <div class="pw"><input class="in" id="lgPw" type="password" required autocomplete="current-password" placeholder="Ketik password"><button type="button" onclick="lihatPw(this)">Lihat</button></div></div>
     <div class="lg-err" id="lgErr" role="alert"></div>
-    <div class="row"><button class="btn btn-g" type="button" onclick="tutupLogin()">Batal</button>
-      <button class="btn btn-p" id="lgBtn" type="submit"><span class="spin"></span>Masuk</button></div>
+    <button class="btn btn-p btn-big" id="lgBtn" type="submit"><span class="spin"></span>Masuk</button>
+    <button class="btn btn-t lg-batal" type="button" onclick="tutupLogin()">Batal</button>
+    <p class="lg-note">Sesi tetap aktif 6 jam selama dipakai. Ketuk <b>Keluar</b> di kanan atas bila memakai HP bersama.</p>
   </form>
 </div>
 <div id="tip" role="tooltip"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <div class="wrap" id="viewForm">
 <main>
+  <nav class="stepper" id="stepper" aria-label="Langkah pembuatan surat">
+    <button type="button" data-st="1"><i>1</i><span>Almarhum</span></button>
+    <button type="button" data-st="2"><i>2</i><span>Waktu</span></button>
+    <button type="button" data-st="3"><i>3</i><span>Orang tua</span></button>
+    <button type="button" data-st="4"><i>4</i><span>Pelapor</span></button>
+    <button type="button" data-st="5"><i>5</i><span>Buat</span></button>
+  </nav>
+
   <!-- 1. JENAZAH -->
   <section class="step" id="st1">
-    <div class="step-h"><span class="num">1</span><h2>Siapa yang meninggal?</h2></div>
+    <div class="step-h"><span class="num">1</span><h2>Siapa yang meninggal?</h2><span class="req">wajib</span></div>
+    <p class="step-desc">Ketik nama, NIK, atau nomor KK, lalu ketuk namanya di daftar. Orang tua dan anggota keluarga ikut terisi.</p>
     <div class="step-b"><div id="person-J_"></div></div>
   </section>
 
   <!-- 2. PERISTIWA -->
   <section class="step" id="st2">
-    <div class="step-h"><span class="num">2</span><h2>Waktu dan sebab kematian</h2></div>
+    <div class="step-h"><span class="num">2</span><h2>Waktu dan sebab kematian</h2><span class="req">tanggal wajib</span></div>
+    <p class="step-desc">Isi tanggal meninggal. Pukul, tempat, dan sebab sesuaikan dengan keterangan keluarga.</p>
     <div class="step-b">
       <div class="grid">
         <div><label class="f" for="J_TGL_MATI">Tanggal meninggal</label><input class="in" type="date" id="J_TGL_MATI" data-k>
@@ -526,7 +663,8 @@
 
   <!-- 3. ORANG TUA -->
   <section class="step" id="st3">
-    <div class="step-h"><span class="num">3</span><h2>Orang tua almarhum</h2><span class="hint">Terisi otomatis dari nama di KK</span></div>
+    <div class="step-h"><span class="num">3</span><h2>Orang tua almarhum</h2><span class="opt">boleh kosong</span></div>
+    <p class="step-desc">Terisi otomatis dari nama di KK. Periksa, ketuk <b>Ubah</b> bila keliru.</p>
     <div class="step-b pair">
       <div><h3>Ayah</h3><div id="person-A_"></div></div>
       <div><h3>Ibu</h3><div id="person-I_"></div></div>
@@ -535,18 +673,21 @@
 
   <!-- 4. PELAPOR & SAKSI -->
   <section class="step" id="st4">
-    <div class="step-h"><span class="num">4</span><h2>Pelapor dan saksi</h2></div>
+    <div class="step-h"><span class="num">4</span><h2>Pelapor dan saksi</h2><span class="req">pelapor wajib</span></div>
+    <p class="step-desc">Pelapor biasanya keluarga almarhum. Ketuk tombol di daftar anggota keluarga untuk mengisi cepat.</p>
     <div class="step-b">
       <div class="fam" id="fam" hidden></div>
-      <div class="who"><h3>Pelapor</h3><div id="person-P_"></div></div>
-      <div class="who"><h3>Saksi I</h3><div id="person-S1_"></div></div>
-      <div class="who" style="margin-bottom:0"><h3>Saksi II</h3><div id="person-S2_"></div></div>
+      <div class="who"><h3>Pelapor <span class="req">wajib</span></h3><div id="person-P_"></div></div>
+      <div class="who"><h3>Saksi I <span class="opt">boleh kosong</span></h3><div id="person-S1_"></div></div>
+      <div class="who" style="margin-bottom:0"><h3>Saksi II <span class="opt">boleh kosong</span></h3><div id="person-S2_"></div></div>
     </div>
   </section>
 </main>
 
 <aside>
-  <div class="panel">
+  <div class="panel step" id="st5">
+    <div class="step-h"><span class="num">5</span><h2>Periksa dan buat surat</h2></div>
+    <p class="step-desc">Cek daftar di bawah. Bila semua yang wajib sudah hijau, ketuk <b>Buat file Excel</b>.</p>
     <div class="letter">
       <div class="lbl" id="nomorLbl">Nomor surat</div>
       <div class="nomor" id="nomorView">400.12.3.1/ … / … / …</div>
@@ -588,7 +729,7 @@
 
 <div class="mbar">
   <div class="t"><b id="mNomor">…</b><span id="mStatus">Lengkapi data yang wajib</span></div>
-  <button class="btn btn-p" id="btnGenM" onclick="SELESAI ? suratBaru() : generate()"><span class="spin"></span><span id="mBtnTxt">Buat Excel</span></button>
+  <button class="btn btn-p" id="btnGenM" onclick="aksiMbar()"><span class="spin"></span><span id="mBtnTxt">Buat Excel</span></button>
 </div>
 
 <script>
@@ -605,7 +746,7 @@ const AGAMA = [['','Pilih'],['1','Islam'],['2','Kristen'],['3','Katolik'],['4','
 const ALAMAT = [['ALAMAT','Alamat / dusun','c2',20],['RT','RT'],['RW','RW'],['DESA','Desa/kelurahan'],['KEC','Kecamatan'],['KAB','Kabupaten/kota'],['PROV','Provinsi']];
 // [key, label, kelas, maks, opsi, tipe]  ; key diawali '!' = tanpa prefix
 const PERSON = {
-  J_: { hero:true, ph:'Nama, NIK, atau nomor KK almarhum', fields:[
+  J_: { hero:true, ph:'Nama / NIK / No. KK almarhum', fields:[
         ['NAMA','Nama lengkap','c2',31],['NIK','NIK'],['JK','Jenis kelamin','',0,JK],
         ['TGL_LAHIR','Tanggal lahir (sesuai KK)'],['TEMPAT_LAHIR','Tempat lahir','',31],['AGAMA','Agama','',0,AGAMA],['UMUR','Umur (kosong = otomatis)'],
         ['PEKERJAAN','Pekerjaan','c2',31],['!NAMA_KK','Nama kepala keluarga','',31],['!NO_KK','Nomor KK'], ...ALAMAT] },
@@ -677,7 +818,7 @@ function renderPerson(p){
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input class="in" id="q_${p}" placeholder="${cfg.ph}" autocomplete="off" aria-label="${cfg.ph}">
       </div>
-      <div class="search-row"><span>Bukan warga Merden atau tidak ketemu?</span><button class="btn-t" type="button" onclick="manualDari('${p}')">Isi manual</button></div>
+      <div class="search-row"><span>Bukan warga Merden atau tidak ketemu?</span><button class="btn btn-g btn-sm" type="button" onclick="manualDari('${p}')">Isi manual</button></div>
       <div class="results" id="r_${p}" role="listbox"></div>
     </div>
     <div class="p-card">
@@ -932,16 +1073,51 @@ function refreshAll(){
   $('check').innerHTML = items.map(([t, ok, wajib]) => `<li class="${ok?'ok':(wajib?'need':'')}"><span class="dot"></span>${t}<span class="opt">${ok ? '' : (wajib ? 'wajib' : 'boleh kosong')}</span></li>`).join('');
   $('conflicts').innerHTML = cekBentrok().map(w => `<li>${esc(w)}</li>`).join('');
   const siap = items.filter(i => i[2]).every(i => i[1]);
+  const kurang = kurangWajib();
   // Setelah surat jadi, kunci tombol agar tidak terbit surat ganda; lanjut lewat "Surat baru"
   $('btnGen').disabled = !siap || SELESAI;
-  $('btnGen').querySelector('.lbl-gen').textContent = SELESAI ? 'Surat sudah dibuat' : 'Buat file Excel';
-  $('btnGenM').disabled = !SELESAI && !siap;
-  $('mBtnTxt').textContent = SELESAI ? 'Surat baru' : 'Buat Excel';
-  $('mStatus').textContent = SELESAI ? 'Selesai, file tersimpan' : (siap ? 'Siap dibuat' : 'Lengkapi data yang wajib');
-  $('st1').classList.toggle('done', !!nama);
-  $('st2').classList.toggle('done', !!val('J_TGL_MATI'));
-  $('st3').classList.toggle('done', !!(val('A_NAMA') && val('I_NAMA')));
-  $('st4').classList.toggle('done', !!val('P_NAMA'));
+  $('btnGen').querySelector('.lbl-gen').textContent = SELESAI ? 'Surat sudah dibuat' : (siap ? 'Buat file Excel' : 'Lengkapi: ' + kurang.map(k => k[0]).join(', '));
+  $('btnGenM').disabled = false;
+  $('mBtnTxt').textContent = SELESAI ? 'Surat baru' : (siap ? 'Buat Excel' : 'Lengkapi');
+  $('mStatus').textContent = SELESAI ? 'Selesai, file tersimpan' : (siap ? 'Siap dibuat' : 'Belum diisi: ' + kurang.map(k => k[0].toLowerCase()).join(', '));
+  $('mStatus').parentElement.classList.toggle('kurang', !SELESAI && !siap);
+  const done = { 1: !!nama, 2: !!val('J_TGL_MATI'), 3: !!(val('A_NAMA') && val('I_NAMA')), 4: !!val('P_NAMA'), 5: SELESAI };
+  [1, 2, 3, 4, 5].forEach(n => $('st' + n).classList.toggle('done', done[n]));
+  document.querySelectorAll('#stepper button').forEach(b => {
+    const n = +b.dataset.st;
+    b.classList.toggle('ok', done[n]);
+    b.classList.toggle('need', !done[n] && kurang.some(k => k[1] === n) && !!nama);
+  });
+}
+
+/** Isian wajib yang belum ada: [label, nomor langkah, id fokus] */
+function kurangWajib(){
+  const out = [];
+  if (!val('J_NAMA')) out.push(['Almarhum', 1, 'q_J_']);
+  if (!val('J_TGL_MATI')) out.push(['Tanggal meninggal', 2, 'J_TGL_MATI']);
+  if (!val('P_NAMA')) out.push(['Pelapor', 4, 'q_P_']);
+  return out;
+}
+function keLangkah(n, fokusId){
+  const el = $('st' + n); if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (fokusId && $(fokusId) && $(fokusId).offsetParent) setTimeout(() => $(fokusId).focus({ preventScroll: true }), 400);
+}
+function keKurang(){
+  const k = kurangWajib()[0];
+  if (!k) return;
+  toast('Isi dulu: ' + k[0].toLowerCase());
+  keLangkah(k[1], k[2]);
+}
+function aksiMbar(){
+  if (SELESAI) return suratBaru();
+  if (kurangWajib().length) return keKurang();
+  generate();
+}
+let TOAST_T = null;
+function toast(t){
+  const el = $('toast'); el.textContent = t; el.classList.add('show');
+  clearTimeout(TOAST_T); TOAST_T = setTimeout(() => el.classList.remove('show'), 2600);
 }
 /** Satu orang tidak boleh jadi jenazah sekaligus pelapor/saksi, atau dobel peran. */
 function cekBentrok(){
@@ -1040,6 +1216,16 @@ $('NO_URUT').addEventListener('input', e => {
   noManual = !!d; refreshAll();
 });
 $('ttd').addEventListener('change', () => store('skk_ttd', $('ttd').value));
+document.querySelectorAll('#stepper button').forEach(b => b.addEventListener('click', () => keLangkah(+b.dataset.st)));
+// tandai langkah yang sedang terlihat di layar
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const n = e.target.id.slice(2);
+    document.querySelectorAll('#stepper button').forEach(b => b.classList.toggle('now', b.dataset.st === n));
+  }), { rootMargin: '-35% 0px -55% 0px' });
+  [1, 2, 3, 4, 5].forEach(n => io.observe($('st' + n)));
+}
 refreshAll();
 
 // Tutup daftar hasil pencarian bila klik di luar
@@ -1070,7 +1256,10 @@ function runA(fn, ...args){
 function aturMasuk(token, nama){
   TOKEN = token; PETUGAS = nama || ''; simpanToken(token);
   $('whoTop').hidden = !token; $('whoNama').textContent = token ? cap(PETUGAS) : '';
+  $('btnMasuk').hidden = !!token;
+  document.body.classList.toggle('masuk', !!token);
 }
+function masukDariHeader(){ TUJUAN = 'form'; bukaLogin('Masuk untuk membuat surat, melihat riwayat, dan membuat flyer.'); }
 
 function showView(v){
   document.body.dataset.view = v;
@@ -1106,6 +1295,7 @@ async function doLogin(e){
   try {
     const r = await run('login', pw);
     aturMasuk(r.token, r.nama); tutupLogin(); showView(TUJUAN || 'form');
+    toast('Berhasil masuk sebagai ' + cap(r.nama));
   } catch (err) { $('lgErr').textContent = err.message; $('lgPw').select(); }
   $('lgBtn').classList.remove('busy'); $('lgBtn').disabled = false;
   return false;
@@ -1116,6 +1306,7 @@ async function keluar(){
   const t = TOKEN; aturMasuk(null);
   Object.keys(PERSON).forEach(p => { kosongkan(p); setMode(p, 'empty'); });
   INIT = null; SELESAI = false; RW = null; RW_SEL = null; $('rwList').innerHTML = ''; $('rwDetail').innerHTML = ''; showView('dash');
+  toast('Anda sudah keluar');
   try { await run('logout', t); } catch(e){}
 }
 

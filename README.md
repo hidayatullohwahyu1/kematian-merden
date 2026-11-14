@@ -49,3 +49,14 @@ Data warga tidak disimpan di HP.
 
 **Ingin file APK / Play Store?** Masukkan alamat PWA di <https://www.pwabuilder.com> lalu pilih
 *Android* untuk membuat paket TWA (Trusted Web Activity).
+
+## Uji tampilan di komputer (tanpa Apps Script)
+
+```bash
+node dev/build-preview.js
+python -m http.server 8766 -d dev/preview
+```
+
+Buka `http://localhost:8766`. Server Apps Script diganti data **fiktif** di `dev/mock.js`
+(password pratinjau ada di file itu, hanya berlaku lokal). Cocok untuk mengecek tampilan HP
+lewat mode perangkat di DevTools browser.
