@@ -15,8 +15,8 @@
   .tpl button{border:2px solid var(--line-strong);border-radius:10px;padding:0;background:#fff;cursor:pointer;overflow:hidden;text-align:left;font:inherit;color:var(--ink)}
   .tpl button[aria-pressed="true"]{border-color:var(--nila);box-shadow:0 0 0 3px var(--nila-soft)}
   .tpl .sw{height:46px;display:flex;align-items:center;justify-content:center;font-size:20px}
-  .tpl .sw.ar{font-family:Amiri,serif;direction:rtl}
-  .tpl .sw.lt{font-family:"Playfair Display",Georgia,serif;font-size:16px;font-weight:700}
+  .tpl .sw.ar{font-family:"Aref Ruqaa",Amiri,serif;font-weight:700;direction:rtl}
+  .tpl .sw.lt{font-family:"Great Vibes","Cormorant Garamond",Georgia,serif;font-size:21px}
   .tpl .nm{display:block;font-size:12px;padding:5px 6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fl-act{margin-top:12px}
   .fl-msg{font-size:13.5px;color:var(--muted);margin-top:8px;min-height:20px}
@@ -128,16 +128,22 @@ const FL_HARAPAN = {
   },
 };
 /* jenis: islami / umum \u00b7 ar = warna judul (teks Arab atau "Turut Berduka Cita") \u00b7 pt = warna penutup */
+/* lb = lebar teks, atas = awal teks, dasar = jarak tanda tangan dari bawah (disesuaikan dengan ornamen) */
 const FL_TPL = [
-  { jenis: 'islami', nama: 'Hijau Zamrud', bg: ['#0F3D2E', '#082519'], acc: '#C9A24A', ar: '#EBCB7A', ink: '#F7F1DE', soft: 'rgba(247,241,222,.80)', pt: '#EBCB7A', orn: 'khatam' },
-  { jenis: 'islami', nama: 'Malam Teduh', bg: ['#17284D', '#090E1B'], acc: '#D4AF5A', ar: '#EFD08A', ink: '#F4F1E8', soft: 'rgba(244,241,232,.80)', pt: '#EFD08A', orn: 'kubah' },
-  { jenis: 'islami', nama: 'Putih Arabesk', bg: ['#FCF9F2', '#F0E9DA'], acc: '#A8822F', acc2: '#0F3D2E', ar: '#0F3D2E', ink: '#1C2620', soft: '#4A5550', pt: '#0F3D2E', orn: 'arabesk' },
-  { jenis: 'islami', nama: 'Marmer Abu', bg: ['#3A3F44', '#1D2023'], acc: '#C9CED3', ar: '#FFFFFF', ink: '#F4F5F6', soft: 'rgba(244,245,246,.78)', pt: '#FFFFFF', orn: 'girih' },
-  { jenis: 'umum', nama: 'Umum Gelap', bg: ['#2B2F33', '#15181B'], acc: '#BFC5CB', ar: '#FFFFFF', ink: '#F3F4F5', soft: 'rgba(243,244,245,.78)', pt: '#FFFFFF', orn: 'bunga' },
-  { jenis: 'umum', nama: 'Umum Terang', bg: ['#FBFAF8', '#ECE9E4'], acc: '#8A8F96', acc2: '#3A3F45', ar: '#262A2E', ink: '#1F2327', soft: '#51575E', pt: '#262A2E', orn: 'bunga' },
+  { jenis: 'islami', nama: 'Mihrab Zamrud', bg: ['#0E3B2C', '#06231A'], acc: '#C9A24A', ar: '#F0D48A', ink: '#FBF5E4', soft: 'rgba(251,245,228,.82)', pt: '#F0D48A', orn: 'mihrab', lb: 780, atas: 150, dasar: 132 },
+  { jenis: 'islami', nama: 'Malam Lentera', bg: ['#1A2A55', '#070C1C'], acc: '#D9B45F', ar: '#F3D795', ink: '#F6F2E6', soft: 'rgba(246,242,230,.82)', pt: '#F3D795', orn: 'malam', lb: 720, atas: 124, dasar: 182, lampu: '#FFD98A' },
+  { jenis: 'islami', nama: 'Gading Arabesk', bg: ['#FDF9EF', '#F1E7D2'], acc: '#A8822F', acc2: '#0E3B2C', ar: '#0E3B2C', ink: '#1C2620', soft: '#4A5550', pt: '#0E3B2C', orn: 'arabesk', lb: 760, atas: 150, dasar: 130 },
+  { jenis: 'islami', nama: 'Hitam Emas', bg: ['#26231F', '#0D0C0A'], acc: '#CFAE62', ar: '#F2D58C', ink: '#F7F1E1', soft: 'rgba(247,241,225,.80)', pt: '#F2D58C', orn: 'girih', lb: 780, atas: 160, dasar: 132 },
+  { jenis: 'umum', nama: 'Umum Gelap', bg: ['#2B2F33', '#15181B'], acc: '#BFC5CB', ar: '#FFFFFF', ink: '#F3F4F5', soft: 'rgba(243,244,245,.78)', pt: '#FFFFFF', orn: 'bunga', lb: 840, atas: 126, dasar: 118 },
+  { jenis: 'umum', nama: 'Umum Terang', bg: ['#FBFAF8', '#ECE9E4'], acc: '#8A8F96', acc2: '#3A3F45', ar: '#262A2E', ink: '#1F2327', soft: '#51575E', pt: '#262A2E', orn: 'bunga', lb: 840, atas: 126, dasar: 118 },
 ];
-const FF_AR = 'Amiri, "Traditional Arabic", serif';
-const FF_SERIF = '"Playfair Display", Georgia, serif';
+/* Huruf: Aref Ruqaa (kaligrafi Riq'ah) untuk lafaz istirja, Amiri Quran (harakat lega ala mushaf) untuk doa,
+   Great Vibes (latin indah) untuk kalimat duka & tanda tangan, Cinzel untuk kepala, Cormorant Garamond untuk nama. */
+const FF_AR = '"Aref Ruqaa", Amiri, "Traditional Arabic", serif';
+const FF_DOA = '"Amiri Quran", Amiri, "Traditional Arabic", serif';
+const FF_SERIF = '"Cormorant Garamond", Georgia, serif';
+const FF_HEAD = 'Cinzel, Georgia, serif';
+const FF_SCRIPT = '"Great Vibes", "Cormorant Garamond", cursive';
 const FF_SANS = '"Plus Jakarta Sans", system-ui, sans-serif';
 const FL_AKRONIM = /\b(Rsud|Rsu|Rs|Tpu|Pku|Rt|Rw|Tni|Polri)\b/g;
 
@@ -287,7 +293,7 @@ function flGaris(x, t, y, w) {
   x.beginPath(); x.moveTo(540 - w, y); x.lineTo(540 - 24, y); x.moveTo(540 + 24, y); x.lineTo(540 + w, y); x.stroke();
   x.restore();
   if (t.orn === 'bunga') flWajik(x, 540, y, 8, t.acc);
-  else flBintang(x, 540, y, 11, t.acc);
+  else { flKhatam(x, 540, y, 12, t.acc); flKhatam(x, 540, y, 5, t.bg[0]); flWajik(x, 540 - w - 10, y, 5, t.acc); flWajik(x, 540 + w + 10, y, 5, t.acc); }
 }
 function flSulur(x, t, y, tengah) {
   x.save();
@@ -306,40 +312,208 @@ function flSulur(x, t, y, tengah) {
   x.restore();
   if (tengah) flBintang(x, 540, y, 16, t.acc);
 }
+/* ---- unsur ornamen Islami ---- */
+/** Bintang khatam (dua persegi bertumpuk, bintang delapan sudut) */
+function flKhatam(x, cx, cy, r, isi, garis, lw) {
+  x.beginPath();
+  for (let i = 0; i < 16; i++) {
+    const a = -Math.PI / 2 + i * Math.PI / 8, rr = i % 2 ? r * 0.7 : r;
+    x.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a));
+  }
+  x.closePath();
+  if (isi) { x.fillStyle = isi; x.fill(); }
+  if (garis) { x.strokeStyle = garis; x.lineWidth = lw || 1.5; x.stroke(); }
+}
+/** Pola girih: bintang delapan dan wajik bersambung, dipakai sebagai tekstur halus */
+function flPola(x, t, alpha, s, klip) {
+  x.save();
+  if (klip) klip();
+  x.globalAlpha = alpha; x.strokeStyle = t.acc; x.lineWidth = 1.3;
+  for (let r = 0; r * s <= 1350 + s; r++) for (let c = 0; c * s <= 1080 + s; c++) {
+    const cx = c * s, cy = r * s;
+    flKhatam(x, cx, cy, s * 0.36, null, t.acc, 1.3);
+    flKhatam(x, cx, cy, s * 0.16, null, t.acc, 1);
+    const h = s / 2, q = s * 0.14;
+    x.beginPath(); x.moveTo(cx + h, cy + h - q); x.lineTo(cx + h + q, cy + h); x.lineTo(cx + h, cy + h + q); x.lineTo(cx + h - q, cy + h); x.closePath(); x.stroke();
+    x.beginPath(); x.moveTo(cx + s * 0.36, cy); x.lineTo(cx + h - q, cy + h); x.moveTo(cx, cy + s * 0.36); x.lineTo(cx + h, cy + h - q); x.stroke();
+  }
+  x.restore();
+}
+/** Jalur lengkung mihrab (runcing di puncak) */
+function flJalurMihrab(x, l, r, yBahu, yPuncak, yBawah) {
+  const cx = (l + r) / 2, w = (r - l) / 2, hh = yBahu - yPuncak;
+  x.moveTo(l, yBawah); x.lineTo(l, yBahu);
+  x.bezierCurveTo(l, yBahu - hh * 0.62, cx - w * 0.42, yPuncak + hh * 0.2, cx, yPuncak);
+  x.bezierCurveTo(cx + w * 0.42, yPuncak + hh * 0.2, r, yBahu - hh * 0.62, r, yBahu);
+  x.lineTo(r, yBawah);
+}
+function flMihrab(x, t, l, r, yBahu, yPuncak, yBawah, lw) {
+  x.save(); x.strokeStyle = t.acc; x.lineWidth = lw || 3;
+  x.beginPath(); flJalurMihrab(x, l, r, yBahu, yPuncak, yBawah); x.closePath(); x.stroke();
+  x.globalAlpha = 0.7; x.lineWidth = 1.2;
+  x.beginPath(); flJalurMihrab(x, l + 14, r - 14, yBahu + 6, yPuncak + 16, yBawah - 14); x.closePath(); x.stroke();
+  x.restore();
+}
+/** Bulan sabit (dibuat di kanvas kecil agar lubangnya benar-benar transparan) */
+function flSabit(x, cx, cy, r, warna, miring) {
+  const k = document.createElement('canvas'); k.width = k.height = Math.ceil(r * 2 + 4);
+  const g = k.getContext('2d'), o = r + 2;
+  g.fillStyle = warna; g.beginPath(); g.arc(o, o, r, 0, Math.PI * 2); g.fill();
+  g.globalCompositeOperation = 'destination-out';
+  g.beginPath(); g.arc(o + r * 0.42, o - r * 0.18, r * 0.86, 0, Math.PI * 2); g.fill();
+  x.save(); x.translate(cx, cy); x.rotate(miring || 0); x.drawImage(k, -o, -o); x.restore();
+}
+/** Lentera gantung (fanus) dengan cahaya */
+function flLentera(x, t, cx, yTop, panjang, s) {
+  x.save();
+  x.strokeStyle = t.acc; x.lineWidth = 1.8; x.globalAlpha = 0.9;
+  x.beginPath(); x.moveTo(cx, yTop); x.lineTo(cx, yTop + panjang); x.stroke(); x.globalAlpha = 1;
+  const y = yTop + panjang, cy = y + s * 1.35;
+  const g = x.createRadialGradient(cx, cy, 2, cx, cy, s * 3.2);
+  g.addColorStop(0, 'rgba(255,214,130,.42)'); g.addColorStop(1, 'rgba(255,214,130,0)');
+  x.fillStyle = g; x.beginPath(); x.arc(cx, cy, s * 3.2, 0, Math.PI * 2); x.fill();
+  x.fillStyle = t.acc;
+  x.beginPath(); x.arc(cx, y + 3, 4.5, 0, Math.PI * 2); x.fill();
+  x.beginPath(); x.moveTo(cx - s * 0.62, y + s * 0.55); x.bezierCurveTo(cx - s * 0.5, y + s * 0.05, cx + s * 0.5, y + s * 0.05, cx + s * 0.62, y + s * 0.55); x.closePath(); x.fill();
+  x.beginPath();
+  x.moveTo(cx - s * 0.55, y + s * 0.6); x.lineTo(cx + s * 0.55, y + s * 0.6); x.lineTo(cx + s * 0.8, y + s * 1.45);
+  x.lineTo(cx + s * 0.42, y + s * 2.25); x.lineTo(cx - s * 0.42, y + s * 2.25); x.lineTo(cx - s * 0.8, y + s * 1.45); x.closePath();
+  const kaca = x.createLinearGradient(cx, y + s * 0.6, cx, y + s * 2.25);
+  kaca.addColorStop(0, t.lampu || '#FFD98A'); kaca.addColorStop(1, '#E59B3A');
+  x.fillStyle = kaca; x.fill(); x.lineWidth = 2.6; x.strokeStyle = t.acc; x.stroke();
+  x.lineWidth = 1.4; x.beginPath();
+  x.moveTo(cx, y + s * 0.6); x.lineTo(cx, y + s * 2.25);
+  x.moveTo(cx - s * 0.8, y + s * 1.45); x.lineTo(cx + s * 0.8, y + s * 1.45); x.stroke();
+  x.fillStyle = t.acc; x.beginPath(); x.moveTo(cx - s * 0.42, y + s * 2.25); x.lineTo(cx + s * 0.42, y + s * 2.25); x.lineTo(cx, y + s * 2.9); x.closePath(); x.fill();
+  x.beginPath(); x.arc(cx, y + s * 3.0, 3.5, 0, Math.PI * 2); x.fill();
+  x.restore();
+}
+/** Siluet masjid: kubah utama, dua kubah kecil, dua menara */
+function flMasjid(x, cx, yB, s, warna, alpha) {
+  const kubah = (kx, ky, w, h) => {
+    x.moveTo(kx - w, ky);
+    x.bezierCurveTo(kx - w * 1.05, ky - h * 0.62, kx - w * 0.3, ky - h * 0.82, kx, ky - h);
+    x.bezierCurveTo(kx + w * 0.3, ky - h * 0.82, kx + w * 1.05, ky - h * 0.62, kx + w, ky);
+    x.closePath();
+    x.rect(kx - 2.5 * s, ky - h - 26 * s, 5 * s, 28 * s);
+  };
+  const menara = (mx, w, h) => {
+    x.rect(mx - w / 2, yB - h, w, h);
+    x.rect(mx - w * 0.85, yB - h * 0.72, w * 1.7, 9 * s);
+    x.rect(mx - w * 0.7, yB - h * 0.4, w * 1.4, 7 * s);
+    x.moveTo(mx - w * 0.6, yB - h); x.lineTo(mx, yB - h - w * 2.1); x.lineTo(mx + w * 0.6, yB - h); x.closePath();
+  };
+  x.save(); x.globalAlpha = alpha; x.fillStyle = warna; x.beginPath();
+  x.rect(cx - 210 * s, yB - 70 * s, 420 * s, 70 * s);
+  kubah(cx, yB - 70 * s, 100 * s, 130 * s);
+  kubah(cx - 150 * s, yB - 70 * s, 46 * s, 66 * s);
+  kubah(cx + 150 * s, yB - 70 * s, 46 * s, 66 * s);
+  menara(cx - 250 * s, 26 * s, 250 * s); menara(cx + 250 * s, 26 * s, 250 * s);
+  x.fill();
+  /* pintu & jendela lengkung dikosongkan */
+  x.globalCompositeOperation = 'destination-out'; x.beginPath();
+  [-110, -55, 55, 110].forEach(dx => { x.moveTo(cx + dx * s - 11 * s, yB - 12 * s); x.lineTo(cx + dx * s - 11 * s, yB - 40 * s); x.quadraticCurveTo(cx + dx * s, yB - 58 * s, cx + dx * s + 11 * s, yB - 40 * s); x.lineTo(cx + dx * s + 11 * s, yB - 12 * s); x.closePath(); });
+  x.moveTo(cx - 20 * s, yB); x.lineTo(cx - 20 * s, yB - 40 * s); x.quadraticCurveTo(cx, yB - 66 * s, cx + 20 * s, yB - 40 * s); x.lineTo(cx + 20 * s, yB); x.closePath();
+  x.fill();
+  x.restore();
+  x.save(); x.globalAlpha = alpha; flSabit(x, cx, yB - 70 * s - 130 * s - 40 * s, 9 * s, warna, -0.5); x.restore();
+}
+/** Hiasan sudut arabesk: sulur melingkar, daun, dan bintang kecil */
+function flSudut(x, t, cx, cy, sx, sy, s) {
+  x.save(); x.translate(cx, cy); x.scale(sx * s, sy * s);
+  x.strokeStyle = t.acc; x.fillStyle = t.acc; x.lineWidth = 2.4 / s; x.lineCap = 'round';
+  const sulur = (a) => {
+    x.beginPath();
+    if (a) { x.moveTo(0, 0); x.bezierCurveTo(70, -4, 128, 20, 156, 58); x.bezierCurveTo(176, 86, 154, 110, 130, 100); x.bezierCurveTo(110, 92, 118, 70, 136, 74); }
+    else { x.moveTo(0, 0); x.bezierCurveTo(-4, 70, 20, 128, 58, 156); x.bezierCurveTo(86, 176, 110, 154, 100, 130); x.bezierCurveTo(92, 110, 70, 118, 74, 136); }
+    x.stroke();
+  };
+  const daun = (px, py, rot, p) => {
+    x.save(); x.translate(px, py); x.rotate(rot);
+    x.beginPath(); x.moveTo(0, 0); x.quadraticCurveTo(p * 0.5, -p * 0.42, p, 0); x.quadraticCurveTo(p * 0.5, p * 0.42, 0, 0); x.fill();
+    x.restore();
+  };
+  sulur(true); sulur(false);
+  daun(70, 6, -0.35, 30); daun(6, 70, Math.PI / 2 + 0.35, 30);
+  daun(112, 30, 0.7, 24); daun(30, 112, Math.PI / 2 - 0.7, 24);
+  x.beginPath(); x.moveTo(0, 0); x.lineTo(48, 48); x.stroke();
+  flKhatam(x, 48, 48, 18, t.acc); flKhatam(x, 48, 48, 8, t.bg[0]);
+  x.restore();
+}
+/** Pita geometris di sepanjang bingkai */
+function flPita(x, t, inset, lebar, W, H) {
+  const a = inset, b = inset + lebar, m = inset + lebar / 2;
+  x.save(); x.strokeStyle = t.acc; x.lineWidth = 2;
+  x.strokeRect(a, a, W - 2 * a, H - 2 * a); x.lineWidth = 1.2; x.strokeRect(b, b, W - 2 * b, H - 2 * b);
+  const langkah = 46;
+  for (let px = b + 30; px <= W - b - 30; px += langkah) { flKhatam(x, px, m, lebar * 0.32, t.acc); flKhatam(x, px, H - m, lebar * 0.32, t.acc); }
+  for (let py = b + 30; py <= H - b - 30; py += langkah) { flKhatam(x, m, py, lebar * 0.32, t.acc); flKhatam(x, W - m, py, lebar * 0.32, t.acc); }
+  [[m, m], [W - m, m], [m, H - m], [W - m, H - m]].forEach(([px, py]) => { flKhatam(x, px, py, lebar * 0.75, t.acc); flKhatam(x, px, py, lebar * 0.42, t.bg[0]); flKhatam(x, px, py, lebar * 0.2, t.acc); });
+  x.restore();
+}
+/** Cahaya lembut di belakang lafaz (memberi kesan hangat, tidak kaku) */
+function flCahaya(x, cx, cy, r, warna) {
+  const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+  g.addColorStop(0, warna); g.addColorStop(1, 'rgba(0,0,0,0)');
+  x.save(); x.fillStyle = g; x.fillRect(cx - r, cy - r, r * 2, r * 2); x.restore();
+}
+/** Bintang kecil di langit malam (posisi tetap agar gambar selalu sama) */
+function flBintangLangit(x, warna) {
+  let a = 7;
+  const acak = () => (a = (a * 9301 + 49297) % 233280) / 233280;
+  x.save(); x.fillStyle = warna;
+  for (let i = 0; i < 70; i++) {
+    const px = 60 + acak() * 960, py = 50 + acak() * 360, r = 0.8 + acak() * 2.2;
+    x.globalAlpha = 0.35 + acak() * 0.6; x.beginPath(); x.arc(px, py, r, 0, Math.PI * 2); x.fill();
+  }
+  x.restore();
+}
+
 function flOrnamen(x, t, W, H) {
   x.save();
-  if (t.orn === 'khatam') {
-    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(34, 34, W - 68, H - 68);
-    x.globalAlpha = 0.7; x.lineWidth = 1.2; x.strokeRect(50, 50, W - 100, H - 100); x.globalAlpha = 1;
-    for (let px = 170; px <= W - 170; px += 56) { flWajik(x, px, 34, 7, t.acc); flWajik(x, px, H - 34, 7, t.acc); }
-    for (let py = 170; py <= H - 170; py += 56) { flWajik(x, 34, py, 7, t.acc); flWajik(x, W - 34, py, 7, t.acc); }
-    [[92, 92], [W - 92, 92], [92, H - 92], [W - 92, H - 92]].forEach(([px, py]) => {
-      flBintang(x, px, py, 40, t.acc); flBintang(x, px, py, 25, t.bg[0]); flBintang(x, px, py, 12, t.acc);
-    });
-  } else if (t.orn === 'kubah') {
-    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(34, 34, W - 68, H - 68);
-    x.beginPath(); x.moveTo(62, H - 62); x.lineTo(62, 300);
-    x.bezierCurveTo(62, 120, 280, 58, 540, 50); x.bezierCurveTo(800, 58, W - 62, 120, W - 62, 300);
-    x.lineTo(W - 62, H - 62); x.closePath();
-    x.globalAlpha = 0.8; x.lineWidth = 1.5; x.stroke(); x.globalAlpha = 1;
-    if (!FL.logo) {
-      x.beginPath(); x.arc(540, 88, 15, 0, Math.PI * 2); x.fillStyle = t.acc; x.fill();
-      x.beginPath(); x.arc(546, 83, 12.5, 0, Math.PI * 2); x.fillStyle = t.bg[0]; x.fill();
-    }
-    [[100, H - 100], [W - 100, H - 100]].forEach(([px, py]) => { flBintang(x, px, py, 24, t.acc); flBintang(x, px, py, 13, t.bg[1]); });
-  } else if (t.orn === 'arabesk') {
+  if (t.orn === 'mihrab') {
+    flPola(x, t, 0.07, 96);
+    flCahaya(x, 540, 330, 420, 'rgba(240,212,138,.13)');
+    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(28, 28, W - 56, H - 56);
+    x.globalAlpha = 0.6; x.lineWidth = 1; x.strokeRect(40, 40, W - 80, H - 80); x.globalAlpha = 1;
+    flMihrab(x, t, 96, W - 96, 330, 64, H - 96, 3);
+    flKhatam(x, 540, 50, 15, t.acc); flKhatam(x, 540, 50, 6, t.bg[0]);
+    [[46, 46, 1, 1], [W - 46, 46, -1, 1], [46, H - 46, 1, -1], [W - 46, H - 46, -1, -1]].forEach(([px, py, sx, sy]) => flSudut(x, t, px, py, sx, sy, 0.62));
+    flMasjid(x, 540, H - 98, 0.95, t.acc, 0.1);
+  } else if (t.orn === 'malam') {
+    flBintangLangit(x, '#FFF6D8');
+    flCahaya(x, 540, 300, 460, 'rgba(243,215,149,.10)');
     x.strokeStyle = t.acc; x.lineWidth = 2.5; x.strokeRect(30, 30, W - 60, H - 60);
-    x.lineWidth = 1; x.strokeRect(44, 44, W - 88, H - 88);
-    flSulur(x, t, 74, !FL.logo); flSulur(x, t, H - 70, true);
-    [[44, 44], [W - 44, 44], [44, H - 44], [W - 44, H - 44]].forEach(([px, py]) => flBintang(x, px, py, 15, t.acc));
+    x.globalAlpha = 0.55; x.lineWidth = 1; x.strokeRect(42, 42, W - 84, H - 84); x.globalAlpha = 1;
+    flSabit(x, 905, 150, 52, t.ar, -0.45);
+    flKhatam(x, 845, 118, 9, t.ar);
+    flLentera(x, t, 108, 42, 150, 30);
+    flLentera(x, t, 172, 42, 70, 22);
+    flLentera(x, t, W - 112, 42, 250, 26);
+    /* siluet masjid di kaki kartu */
+    /* cahaya senja di cakrawala agar siluet masjid terlihat jelas */
+    const ufuk = x.createLinearGradient(0, H - 260, 0, H - 42);
+    ufuk.addColorStop(0, 'rgba(217,180,95,0)'); ufuk.addColorStop(1, 'rgba(217,180,95,.30)');
+    x.fillStyle = ufuk; x.fillRect(42, H - 260, W - 84, 218);
+    flMasjid(x, 210, H - 42, 0.32, '#0B1430', 0.95);
+    flMasjid(x, 870, H - 42, 0.36, '#0B1430', 0.95);
+    flMasjid(x, 540, H - 42, 0.56, '#050A1A', 1);
+    x.strokeStyle = t.acc; x.globalAlpha = 0.7; x.lineWidth = 1.5; x.beginPath(); x.moveTo(42, H - 42); x.lineTo(W - 42, H - 42); x.stroke();
+  } else if (t.orn === 'arabesk') {
+    flPola(x, t, 0.06, 88);
+    flPita(x, t, 26, 34, W, H);
+    flMihrab(x, t, 112, W - 112, 300, 96, H - 112, 2);
+    [[112, 112, 1, 1], [W - 112, 112, -1, 1]].forEach(([px, py, sx, sy]) => flSudut(x, t, px - sx * 18, py - sy * 18, sx, sy, 0.42));
+    flKhatam(x, 540, 79, 20, t.acc); flKhatam(x, 540, 79, 9, t.bg[0]);
+    flMasjid(x, 540, H - 114, 0.85, t.acc2 || t.acc, 0.07);
   } else if (t.orn === 'girih') {
-    x.save();
-    x.beginPath(); x.rect(34, 34, W - 68, H - 68); x.rect(96, 96, W - 192, H - 192); x.clip('evenodd');
-    x.globalAlpha = 0.35;
-    for (let r = 0; r * 52 < H; r++) for (let px = 34 + (r % 2 ? 26 : 0); px < W; px += 52) flBintang(x, px, 34 + r * 52, 17, null, t.acc, 1.2);
-    x.restore();
-    x.strokeStyle = t.acc; x.lineWidth = 2.5; x.strokeRect(34, 34, W - 68, H - 68);
-    x.lineWidth = 1.5; x.strokeRect(96, 96, W - 192, H - 192);
+    flPola(x, t, 0.16, 64, () => { x.beginPath(); x.rect(0, 0, W, H); flJalurMihrab(x, 104, W - 104, 360, 92, H - 104); x.closePath(); x.clip('evenodd'); });
+    flPola(x, t, 0.04, 64, () => { x.beginPath(); flJalurMihrab(x, 104, W - 104, 360, 92, H - 104); x.closePath(); x.clip(); });
+    flCahaya(x, 540, 340, 420, 'rgba(242,213,140,.12)');
+    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(30, 30, W - 60, H - 60);
+    flMihrab(x, t, 104, W - 104, 360, 92, H - 104, 3);
+    flLentera(x, t, 540, 30, 18, 17);
+    [[30, 30], [W - 30, 30], [30, H - 30], [W - 30, H - 30]].forEach(([px, py]) => { flKhatam(x, px, py, 30, t.acc); flKhatam(x, px, py, 17, t.bg[1]); flKhatam(x, px, py, 8, t.acc); });
   } else {
     /* bunga: ornamen netral untuk ucapan umum */
     x.strokeStyle = t.acc; x.lineWidth = 2; x.strokeRect(36, 36, W - 72, H - 72);
@@ -392,8 +566,9 @@ function flArab(x, teks, warna, y, maks, min, gaya) {
 /* ======================================================== FLYER: GAMBAR */
 function flGambar() {
   const c = $('flCanvas'); if (!c) return;
-  const x = c.getContext('2d'), W = 1080, H = 1350, cx = W / 2, LB = 860;
+  const x = c.getContext('2d'), W = 1080, H = 1350, cx = W / 2;
   const t = FL_TPL[FL.tpl] || FL_TPL[0], d = flBaca(), P = d.jk === '2', kode = P ? '2' : '1', umum = t.jenis === 'umum';
+  const LB = t.lb || 840;
   x.save();
   x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; flSpasi(x, '0px');
   const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, t.bg[0]); g.addColorStop(1, t.bg[1]);
@@ -426,25 +601,26 @@ function flGambar() {
     };
     const hiasan = (w, gap) => it.push({ a: 11, d: 11, gap: gap, fn: y => flGaris(x, t, y, w) });
 
-    baris(F('600', 27, FF_SANS), t.acc2 || t.acc, 'PEMERINTAH DESA MERDEN', 0, '6px');
-    baris(F('400', 21, FF_SANS), t.soft, 'Kecamatan Purwanegara \u00b7 Kabupaten Banjarnegara', 14);
-    hiasan(170, 28);
+    baris(F('600', 25, FF_HEAD), t.acc2 || t.acc, 'PEMERINTAH DESA MERDEN', 0, '5px');
+    baris(F('italic 500', 24, FF_SERIF), t.soft, 'Kecamatan Purwanegara \u00b7 Kabupaten Banjarnegara', 12);
+    hiasan(150, 26);
     if (umum) {
-      baris(F('700', Z(64), FF_SERIF), t.ar, 'Turut Berduka Cita', 36);
-      baris(F('600', Z(30), FF_SERIF), t.ink, 'Telah meninggal dunia', 26);
+      baris(F('400', Z(84), FF_SCRIPT), t.ar, 'Turut Berduka Cita', 34);
+      baris(F('italic 500', Z(32), FF_SERIF), t.ink, 'Telah meninggal dunia', 22);
     } else {
-      const fI = F('700', pasArab(FL_ISTIRJA, '700', Z(82), 52, 840), FF_AR), mI = ukurArab(fI, FL_ISTIRJA);
-      it.push({ a: mI.a, d: mI.d, gap: 34, fn: tulisArab(fI, t.ar, FL_ISTIRJA) });
-      baris(F('500', Z(27), FF_SERIF, true), t.soft, "Innalillahi wa inna ilaihi raji'un", 30);
-      baris(F('600', Z(31), FF_SERIF), t.ink, 'Telah berpulang ke rahmatullah', 30);
+      /* lafaz istirja: kaligrafi Riq'ah; jarak atas-bawah diukur dari harakat agar tidak berdempetan */
+      const fI = F('700', pasArab(FL_ISTIRJA, '700', Z(92), 56, LB), FF_AR), mI = ukurArab(fI, FL_ISTIRJA);
+      it.push({ a: mI.a, d: mI.d, gap: 40, fn: tulisArab(fI, t.ar, FL_ISTIRJA) });
+      baris(F('italic 500', Z(30), FF_SERIF), t.soft, "Innalillahi wa inna ilaihi raji'un", 30);
+      baris(F('400', Z(54), FF_SCRIPT), t.ink, 'Telah berpulang ke rahmatullah', 26);
     }
-    baris(F('600', 21, FF_SANS), t.acc2 || t.acc, d.jk ? (P ? 'ALMARHUMAH' : 'ALMARHUM') : 'ALMARHUM / ALMARHUMAH', 42, '7px');
+    baris(F('600', 20, FF_HEAD), t.acc2 || t.acc, d.jk ? (P ? 'ALMARHUMAH' : 'ALMARHUM') : 'ALMARHUM / ALMARHUMAH', 40, '6px');
     const nama = d.nama || 'Nama Almarhum';
-    let sN = Z(72); x.font = F('700', sN, FF_SERIF);
-    while (sN > 46 && x.measureText(nama).width > LB) { sN -= 2; x.font = F('700', sN, FF_SERIF); }
-    if (x.measureText(nama).width > LB) { sN = Z(54); paragraf(F('700', sN, FF_SERIF), t.ink, nama, 18, 10); }
-    else baris(F('700', sN, FF_SERIF), t.ink, nama, 18);
-    if (d.binOn && d.ayah) baris(F('500', Z(28), FF_SERIF, true), t.soft, (P ? 'binti ' : 'bin ') + d.ayah, 16);
+    let sN = Z(80); x.font = F('700', sN, FF_SERIF);
+    while (sN > 50 && x.measureText(nama).width > LB) { sN -= 2; x.font = F('700', sN, FF_SERIF); }
+    if (x.measureText(nama).width > LB) { sN = Z(58); paragraf(F('700', sN, FF_SERIF), t.ink, nama, 16, 8); }
+    else baris(F('700', sN, FF_SERIF), t.ink, nama, 16);
+    if (d.binOn && d.ayah) baris(F('italic 500', Z(32), FF_SERIF), t.soft, (P ? 'binti ' : 'bin ') + d.ayah, 12);
     const info = [d.umur ? 'Usia ' + d.umur + ' tahun' : '', d.alamat].filter(Boolean).join('  \u00b7  ');
     if (info) paragraf(F('400', Z(23), FF_SANS), t.soft, info, 24, 12);
     hiasan(110, 30);
@@ -457,33 +633,33 @@ function flGambar() {
   };
 
   /* ---- susunan bawah: dihitung naik dari dasar flyer */
-  const fP = F('700', 40, FF_SERIF), mP = ukurLatin(fP), yP = H - 118;
-  const fT = F('400', 22, FF_SANS), mT = ukurLatin(fT), yT = yP - mP.a - 20 - mT.d;
+  const fP = F('400', 56, FF_SCRIPT), mP = ukurLatin(fP), yP = H - (t.dasar || 118);
+  const fT = F('italic 500', 26, FF_SERIF), mT = ukurLatin(fT), yT = yP - mP.a - 16 - mT.d;
   const fH = F('400', 22, FF_SANS), mH = ukurLatin(fH); x.font = fH;
-  const har = flSeimbang(x, FL_HARAPAN[umum ? 'umum' : 'islami'][kode], 800), lhH = mH.a + mH.d + 13;
+  const har = flSeimbang(x, FL_HARAPAN[umum ? 'umum' : 'islami'][kode], Math.min(800, LB)), lhH = mH.a + mH.d + 13;
   const yHarAkhir = yT - mT.a - 36 - mH.d, yHarAwal = yHarAkhir - (har.length - 1) * lhH;
   let atasBawah = yHarAwal - mH.a, yDL = 0, yDA = 0, fDA = '', fDL = '';
   if (!umum) {
-    fDL = F('500', 24, FF_SERIF, true); const mDL = ukurLatin(fDL);
+    fDL = F('italic 500', 27, FF_SERIF); const mDL = ukurLatin(fDL);
     yDL = atasBawah - 26 - mDL.d;
-    fDA = F('400', pasArab(FL_DOA[kode].ar, '400', 46, 32, 840), FF_AR); const mDA = ukurArab(fDA, FL_DOA[kode].ar);
-    yDA = yDL - mDL.a - 24 - mDA.d;
+    fDA = F('400', pasArab(FL_DOA[kode].ar, '400', 46, 32, LB), FF_DOA); const mDA = ukurArab(fDA, FL_DOA[kode].ar);
+    yDA = yDL - mDL.a - 30 - mDA.d;
     atasBawah = yDA - mDA.a;
   }
 
   /* ---- tata ruang atas: perkecil huruf bila perlu, lalu rentangkan jarak agar pas dan seimbang */
-  const yAwal = (FL.logo ? 152 : 112) + (t.orn === 'kubah' || t.orn === 'bunga' ? 14 : 0), ruang = (atasBawah - 46) - yAwal;
+  const yAwal = (t.atas || 112) + (FL.logo ? 40 : 0), ruang = (atasBawah - 46) - yAwal;
   let k = 1, geser = 0, tinggiHuruf = 0, totalGap = 0;
-  for (let sk = 1; sk >= 0.78; sk -= 0.04) {
+  for (let sk = 1; sk >= 0.66; sk -= 0.03) {
     bangun(sk);
     tinggiHuruf = it.reduce((s, i) => s + i.a + i.d, 0); totalGap = it.reduce((s, i) => s + i.gap, 0);
     k = totalGap ? (ruang - tinggiHuruf) / totalGap : 1;
-    if (k >= 0.8) break;
+    if (k >= 0.72) break;
   }
-  FL.kepenuhan = k < 0.55;
+  FL.kepenuhan = k < 0.42;
   const kMaks = umum ? 2.1 : 1.6;
   if (k > kMaks) { geser = (ruang - tinggiHuruf - totalGap * kMaks) / 2; k = kMaks; }
-  k = Math.max(k, 0.55);
+  k = Math.max(k, 0.42);
   let y = yAwal + geser;
   it.forEach((i, n) => { y += (n ? i.gap * k : 0) + i.a; i.fn(y); y += i.d; });
 
@@ -596,7 +772,7 @@ function flSiapkan() {
   if (!document.getElementById('flFont')) {       /* muat huruf kartu hanya saat dibutuhkan */
     const l = document.createElement('link');
     l.id = 'flFont'; l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap';
+    l.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Aref+Ruqaa:wght@700&family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,700;1,500&family=Great+Vibes&display=swap';
     l.onload = () => flSiapkanHuruf();
     document.head.appendChild(l);
   }
@@ -611,9 +787,10 @@ function flSiapkan() {
 function flSiapkanHuruf() {
   if (document.fonts && document.fonts.load) {
     Promise.all([
-      document.fonts.load('700 80px Amiri', '\u0625\u0646\u0627'), document.fonts.load('400 44px Amiri', '\u0627\u0644\u0644\u0647\u0645'),
-      document.fonts.load('700 70px "Playfair Display"'), document.fonts.load('600 34px "Playfair Display"'),
-      document.fonts.load('italic 500 30px "Playfair Display"'),
+      document.fonts.load('700 80px "Aref Ruqaa"', '\u0625\u0646\u0627'), document.fonts.load('400 44px "Amiri Quran"', '\u0627\u0644\u0644\u0647\u0645'),
+      document.fonts.load('400 44px Amiri', '\u0627\u0644\u0644\u0647\u0645'),
+      document.fonts.load('600 26px Cinzel'), document.fonts.load('700 70px "Cormorant Garamond"'),
+      document.fonts.load('italic 500 30px "Cormorant Garamond"'), document.fonts.load('400 54px "Great Vibes"'),
       document.fonts.load('600 30px "Plus Jakarta Sans"'), document.fonts.load('400 24px "Plus Jakarta Sans"'),
     ]).then(() => flGambar()).catch(() => flGambar());
   }
