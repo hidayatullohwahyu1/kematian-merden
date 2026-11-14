@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SK Kematian Merden</title>
+<meta name="description" content="Surat Keterangan Kematian (F-201) dan dashboard kematian Desa Merden.">
+<meta name="theme-color" content="#233E63">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SK Kematian">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  :root{--nila:#233E63;--paper:#F2F4F3;--ink:#18262E;--muted:#5D6B72}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+  #app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:var(--paper)}
+
+  .layar{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;padding:24px;text-align:center;background:var(--nila);color:#fff;transition:opacity .35s}
+  .layar.hilang{opacity:0;pointer-events:none}
+  .layar img{width:96px;height:96px;border-radius:22px}
+  .layar h1{margin:0;font-size:19px;font-weight:700}
+  .layar p{margin:0;font-size:14px;opacity:.8;max-width:34ch;line-height:1.5}
+  .putar{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;
+    animation:putar .9s linear infinite}
+  @keyframes putar{to{transform:rotate(360deg)}}
+  .btn{appearance:none;border:0;border-radius:10px;padding:12px 20px;font:inherit;font-weight:600;font-size:15px;
+    background:#fff;color:var(--nila);cursor:pointer}
+  .btn:focus-visible{outline:3px solid #7FA2D6;outline-offset:2px}
+  #offline{display:none}
+  body.offline #offline{display:flex}
+
+  #pasang{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));display:none;
+    align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:#fff;color:var(--ink);
+    box-shadow:0 8px 28px rgba(24,38,46,.28);max-width:460px;margin:0 auto;z-index:5}
+  #pasang.tampil{display:flex}
+  #pasang img{width:40px;height:40px;border-radius:10px;flex:none}
+  #pasang .t{flex:1;min-width:0;font-size:14px;line-height:1.35}
+  #pasang .t b{display:block}
+  #pasang .btn{background:var(--nila);color:#fff;padding:9px 14px;font-size:14px}
+  #pasang .x{background:none;border:0;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;padding:4px}
+</style>
+</head>
+<body>
+<iframe id="app" title="Surat Keterangan Kematian Desa Merden"
+  allow="clipboard-read; clipboard-write; fullscreen; web-share"
+  referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+<div class="layar" id="muat" role="status" aria-live="polite">
+  <img src="icons/icon-192.png" alt="">
+  <h1>SK Kematian · Desa Merden</h1>
+  <div class="putar" aria-hidden="true"></div>
+  <p id="muatTeks">Memuat aplikasi…</p>
+</div>
+
+<div class="layar" id="offline" role="alert">
+  <img src="icons/icon-192.png" alt="">
+  <h1>Tidak ada koneksi internet</h1>
+  <p>Aplikasi ini membaca data langsung dari server desa. Sambungkan HP ke internet, lalu coba lagi.</p>
+  <button class="btn" type="button" onclick="muatUlang()">Coba lagi</button>
+</div>
+
+<div id="pasang" role="dialog" aria-label="Pasang aplikasi">
+  <img src="icons/icon-192.png" alt="">
+  <div class="t"><b>Pasang di HP</b>Buka lebih cepat dari layar utama.</div>
+  <button class="btn" type="button" id="btnPasang">Pasang</button>
+  <button class="x" type="button" id="tutupPasang" aria-label="Tutup">&times;</button>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var URL_APP = (window.APP_CONFIG && window.APP_CONFIG.WEB_APP_URL) || '';
+  var app = document.getElementById('app');
+  var muat = document.getElementById('muat');
+  var muatTeks = document.getElementById('muatTeks');
+  var sudahMuat = false, lambat;
+
+  function aturOnline() { document.body.classList.toggle('offline', !navigator.onLine); }
+
+  window.muatUlang = function () {
+    aturOnline();
+    if (!navigator.onLine) return;
+    if (!URL_APP) { muatTeks.textContent = 'URL Web App belum diisi di config.js.'; return; }
+    sudahMuat = false;
+    muat.classList.remove('hilang');
+    muatTeks.textContent = 'Memuat aplikasi…';
+    clearTimeout(lambat);
+    lambat = setTimeout(function () {
+      if (!sudahMuat) muatTeks.textContent = 'Server sedang lambat, mohon tunggu sebentar…';
+    }, 8000);
+    app.src = URL_APP + (URL_APP.indexOf('?') < 0 ? '?' : '&') + 'pwa=1';
+  };
+
+  app.addEventListener('load', function () {
+    if (!app.src) return;
+    sudahMuat = true;
+    clearTimeout(lambat);
+    muat.classList.add('hilang');
+  });
+
+  window.addEventListener('online', function () { if (!sudahMuat) muatUlang(); else aturOnline(); });
+  window.addEventListener('offline', aturOnline);
+  muatUlang();
+
+  // ---------- service worker ----------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+
+  // ---------- ajakan pasang (Android Chrome) ----------
+  var pasang = document.getElementById('pasang'), tunda = null;
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  function tolak() { try { return localStorage.getItem('tolakPasang') === '1'; } catch (e) { return false; } }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    tunda = e;
+    if (!standalone && !tolak()) pasang.classList.add('tampil');
+  });
+  document.getElementById('btnPasang').addEventListener('click', function () {
+    pasang.classList.remove('tampil');
+    if (tunda) { tunda.prompt(); tunda = null; }
+  });
+  document.getElementById('tutupPasang').addEventListener('click', function () {
+    pasang.classList.remove('tampil');
+    try { localStorage.setItem('tolakPasang', '1'); } catch (e) {}
+  });
+  window.addEventListener('appinstalled', function () { pasang.classList.remove('tampil'); });
+})();
+</script>
+</body>
+</html>

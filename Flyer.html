@@ -1,0 +1,713 @@
+<!-- ===================== MENU BUAT FLYER WA ===================== -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  body:not([data-view="flyer"]) #viewFlyer{display:none}
+  body[data-view="flyer"] #viewDash, body[data-view="flyer"] #viewForm, body[data-view="flyer"] #viewRiwayat,
+  body[data-view="flyer"] .mbar{display:none!important}
+  .fl{max-width:1240px;margin:0 auto;padding:22px 20px 60px}
+  .fl-head{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+  .fl-head h2{margin:0;font-size:22px;font-weight:700}
+  .fl-head p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:62ch}
+  .fl-wrap{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:20px;align-items:start}
+  .fl-prev{position:sticky;top:16px}
+  .fl-prev canvas{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 6px 24px rgba(24,38,46,.18);background:#E3E8E6}
+  .tpl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .tpl button{border:2px solid var(--line-strong);border-radius:10px;padding:0;background:#fff;cursor:pointer;overflow:hidden;text-align:left;font:inherit;color:var(--ink)}
+  .tpl button[aria-pressed="true"]{border-color:var(--nila);box-shadow:0 0 0 3px var(--nila-soft)}
+  .tpl .sw{height:46px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .tpl .sw.ar{font-family:Amiri,serif;direction:rtl}
+  .tpl .sw.lt{font-family:"Playfair Display",Georgia,serif;font-size:16px;font-weight:700}
+  .tpl .nm{display:block;font-size:12px;padding:5px 6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fl-act{margin-top:12px}
+  .fl-msg{font-size:13.5px;color:var(--muted);margin-top:8px;min-height:20px}
+  .fl-msg.err{color:var(--err)} .fl-msg.ok{color:var(--ok)} .fl-msg.warn{color:var(--warn)}
+  .fl-cek{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+  .fl-cek input{width:18px;height:18px;margin:0}
+  textarea.in{height:auto;min-height:72px;padding:10px 12px;resize:vertical;line-height:1.45}
+  .fl-cap{min-height:190px;font-size:14px}
+  .fl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  details.fl-cari > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:16px 20px}
+  details.fl-cari > summary::-webkit-details-marker{display:none}
+  details.fl-cari > summary h2{margin:0;font-size:16px;font-weight:700}
+  details.fl-cari > summary .hint{margin-left:auto;font-size:13px;color:var(--nila);font-weight:600}
+  details.fl-cari[open] > summary .hint::after{content:" (tutup)"}
+  .btn-flyer{margin-top:10px}
+  @media (max-width:980px){.fl-wrap{grid-template-columns:1fr}.fl-prev{position:static;order:-1;max-width:460px;width:100%;margin:0 auto}}
+  @media (max-width:440px){.fl{padding:16px 12px 40px}.tpl{grid-template-columns:repeat(2,minmax(0,1fr))}details.fl-cari > summary{padding:14px}}
+</style>
+
+<section class="fl" id="viewFlyer" aria-labelledby="flTitle">
+  <div class="fl-head">
+    <div>
+      <h2 id="flTitle">Buat Flyer WA</h2>
+      <p>Ucapan belasungkawa dari Pemerintah Desa Merden. Periksa data almarhum, lengkapi pemakaman, pilih template, lalu unduh JPG.</p>
+    </div>
+    <button class="btn btn-g" type="button" id="flBack" onclick="flKembali()">Kembali ke surat</button>
+  </div>
+
+  <div class="fl-wrap">
+    <div>
+      <details class="step fl-cari" id="flCariBox">
+        <summary><span class="num">+</span><h2>Ambil data dari database</h2><span class="hint">Cari</span></summary>
+        <div class="step-b" style="padding-top:0">
+          <div class="search">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input class="in" id="flQ" placeholder="Nama, NIK, atau nomor KK almarhum" autocomplete="off" aria-label="Cari almarhum">
+          </div>
+          <div class="results" id="flRes"></div>
+        </div>
+      </details>
+
+      <section class="step">
+        <div class="step-h"><span class="num">1</span><h2>Data almarhum</h2><span class="hint">Terisi dari form surat</span></div>
+        <div class="step-b"><div class="grid">
+          <div class="c4"><label class="f" for="fl_nama">Nama lengkap (seperti tampil di flyer)</label><input class="in" id="fl_nama" autocomplete="off" maxlength="60"></div>
+          <div><label class="f" for="fl_jk">Jenis kelamin</label>
+            <select class="in" id="fl_jk"><option value="">Pilih</option><option value="1">Laki-laki</option><option value="2">Perempuan</option></select></div>
+          <div class="c2"><label class="f" for="fl_ayah">Nama ayah (untuk bin/binti)</label><input class="in" id="fl_ayah" autocomplete="off" maxlength="40"></div>
+          <div><label class="f" for="fl_umur">Usia (tahun)</label><input class="in" id="fl_umur" inputmode="numeric" maxlength="3"></div>
+          <div class="c2"><label class="f" for="fl_jenis">Jenis ucapan</label>
+            <select class="in" id="fl_jenis"><option value="islami">Islami</option><option value="umum">Umum (warga nonmuslim)</option></select></div>
+          <div class="c2" id="flBinRow" style="align-self:end;padding-bottom:10px"><label class="fl-cek"><input type="checkbox" id="fl_binOn" checked>Tampilkan bin/binti nama ayah</label></div>
+          <div class="c4"><label class="f" for="fl_alamat">Alamat singkat</label><input class="in" id="fl_alamat" autocomplete="off" maxlength="80" placeholder="Dusun Karangkajen, RT 02/RW 08, Desa Merden"></div>
+        </div></div>
+      </section>
+
+      <section class="step">
+        <div class="step-h"><span class="num">2</span><h2>Wafat dan pemakaman</h2></div>
+        <div class="step-b"><div class="grid">
+          <div><label class="f" for="fl_tglWafat">Tanggal wafat</label><input class="in" type="date" id="fl_tglWafat"></div>
+          <div><label class="f" for="fl_jamWafat">Pukul wafat</label><input class="in" type="time" id="fl_jamWafat"></div>
+          <div class="c2"><label class="f" for="fl_tempatWafat">Tempat wafat</label><input class="in" id="fl_tempatWafat" autocomplete="off" maxlength="50"></div>
+          <div class="c4"><label class="fl-cek"><input type="checkbox" id="fl_tempatOn">Tampilkan tempat wafat di flyer</label></div>
+          <div><label class="f" for="fl_tglMakam">Tanggal dimakamkan</label><input class="in" type="date" id="fl_tglMakam">
+            <div class="quick"><button type="button" onclick="flMakamCepat(0)">Hari wafat</button><button type="button" onclick="flMakamCepat(1)">Besoknya</button></div></div>
+          <div><label class="f" for="fl_jamMakam">Pukul dimakamkan</label><input class="in" type="time" id="fl_jamMakam"></div>
+          <div class="c2"><label class="f" for="fl_tempatMakam">Tempat pemakaman</label><input class="in" id="fl_tempatMakam" autocomplete="off" maxlength="50" placeholder="TPU Dusun ..."></div>
+          <div class="c4"><label class="f" for="fl_tambahan">Kalimat tambahan (opsional)</label><textarea class="in" id="fl_tambahan" maxlength="120" placeholder="Misalnya: Jenazah disalatkan di Masjid ... ba'da Zuhur"></textarea></div>
+        </div></div>
+      </section>
+
+      <section class="step">
+        <div class="step-h"><span class="num">3</span><h2>Teks untuk WhatsApp</h2><span class="hint">Dikirim bersama gambar</span></div>
+        <div class="step-b">
+          <textarea class="in fl-cap" id="flCap" readonly aria-label="Teks ucapan untuk WhatsApp"></textarea>
+          <div class="fl-row"><button class="btn btn-g btn-sm" type="button" onclick="flSalin()">Salin teks</button>
+            <button class="btn btn-g btn-sm" type="button" onclick="flWA()">Buka WhatsApp</button></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="fl-prev">
+      <div class="tpl" id="flTpl" role="group" aria-label="Pilih template"></div>
+      <canvas id="flCanvas" width="1080" height="1350" role="img" aria-label="Pratinjau flyer ucapan belasungkawa"></canvas>
+      <div class="fl-act"><button class="btn btn-p btn-big" id="flUnduh" type="button" onclick="flUnduh()">Unduh JPG</button></div>
+      <div class="fl-msg" id="flMsg" role="status" aria-live="polite"></div>
+    </aside>
+  </div>
+</section>
+
+<script>
+/* ======================================================== FLYER: KONSTANTA */
+const FL_HARI = ['Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const FL_HARI_U = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const FL_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const FL_ISTIRJA = '\u0625\u0650\u0646\u064e\u0651\u0627 \u0644\u0650\u0644\u0651\u0670\u0647\u0650 \u0648\u064e\u0625\u0650\u0646\u064e\u0651\u0627 \u0625\u0650\u0644\u064e\u064a\u0652\u0647\u0650 \u0631\u064e\u0627\u062c\u0650\u0639\u064f\u0648\u0652\u0646\u064e';
+const FL_DOA = {
+  '1': { ar: '\u0627\u0644\u0644\u064e\u0651\u0647\u064f\u0645\u064e\u0651 \u0627\u063a\u0652\u0641\u0650\u0631\u0652 \u0644\u064e\u0647\u064f \u0648\u064e\u0627\u0631\u0652\u062d\u064e\u0645\u0652\u0647\u064f \u0648\u064e\u0639\u064e\u0627\u0641\u0650\u0647\u0650 \u0648\u064e\u0627\u0639\u0652\u0641\u064f \u0639\u064e\u0646\u0652\u0647\u064f', lat: "Allahummaghfirlahu warhamhu wa'afihi wa'fu 'anhu" },
+  '2': { ar: '\u0627\u0644\u0644\u064e\u0651\u0647\u064f\u0645\u064e\u0651 \u0627\u063a\u0652\u0641\u0650\u0631\u0652 \u0644\u064e\u0647\u064e\u0627 \u0648\u064e\u0627\u0631\u0652\u062d\u064e\u0645\u0652\u0647\u064e\u0627 \u0648\u064e\u0639\u064e\u0627\u0641\u0650\u0647\u064e\u0627 \u0648\u064e\u0627\u0639\u0652\u0641\u064f \u0639\u064e\u0646\u0652\u0647\u064e\u0627', lat: "Allahummaghfirlaha warhamha wa'afiha wa'fu 'anha" },
+};
+const FL_HARAPAN = {
+  islami: {
+    '1': 'Semoga almarhum husnul khotimah, diampuni dosanya, dan keluarga yang ditinggalkan diberi ketabahan.',
+    '2': 'Semoga almarhumah husnul khotimah, diampuni dosanya, dan keluarga yang ditinggalkan diberi ketabahan.',
+  },
+  umum: {
+    '1': 'Semoga almarhum beristirahat dalam damai, dan keluarga yang ditinggalkan diberi kekuatan dan ketabahan.',
+    '2': 'Semoga almarhumah beristirahat dalam damai, dan keluarga yang ditinggalkan diberi kekuatan dan ketabahan.',
+  },
+};
+/* jenis: islami / umum \u00b7 ar = warna judul (teks Arab atau "Turut Berduka Cita") \u00b7 pt = warna penutup */
+const FL_TPL = [
+  { jenis: 'islami', nama: 'Hijau Zamrud', bg: ['#0F3D2E', '#082519'], acc: '#C9A24A', ar: '#EBCB7A', ink: '#F7F1DE', soft: 'rgba(247,241,222,.80)', pt: '#EBCB7A', orn: 'khatam' },
+  { jenis: 'islami', nama: 'Malam Teduh', bg: ['#17284D', '#090E1B'], acc: '#D4AF5A', ar: '#EFD08A', ink: '#F4F1E8', soft: 'rgba(244,241,232,.80)', pt: '#EFD08A', orn: 'kubah' },
+  { jenis: 'islami', nama: 'Putih Arabesk', bg: ['#FCF9F2', '#F0E9DA'], acc: '#A8822F', acc2: '#0F3D2E', ar: '#0F3D2E', ink: '#1C2620', soft: '#4A5550', pt: '#0F3D2E', orn: 'arabesk' },
+  { jenis: 'islami', nama: 'Marmer Abu', bg: ['#3A3F44', '#1D2023'], acc: '#C9CED3', ar: '#FFFFFF', ink: '#F4F5F6', soft: 'rgba(244,245,246,.78)', pt: '#FFFFFF', orn: 'girih' },
+  { jenis: 'umum', nama: 'Umum Gelap', bg: ['#2B2F33', '#15181B'], acc: '#BFC5CB', ar: '#FFFFFF', ink: '#F3F4F5', soft: 'rgba(243,244,245,.78)', pt: '#FFFFFF', orn: 'bunga' },
+  { jenis: 'umum', nama: 'Umum Terang', bg: ['#FBFAF8', '#ECE9E4'], acc: '#8A8F96', acc2: '#3A3F45', ar: '#262A2E', ink: '#1F2327', soft: '#51575E', pt: '#262A2E', orn: 'bunga' },
+];
+const FF_AR = 'Amiri, "Traditional Arabic", serif';
+const FF_SERIF = '"Playfair Display", Georgia, serif';
+const FF_SANS = '"Plus Jakarta Sans", system-ui, sans-serif';
+const FL_AKRONIM = /\b(Rsud|Rsu|Rs|Tpu|Pku|Rt|Rw|Tni|Polri)\b/g;
+
+const FL = { tpl: 0, pilih: { islami: 0, umum: 4 }, src: 'form', next: null, kunci: '', tglLahir: '', logo: null,
+  siap: false, timer: null, kepenuhan: false, pesanPenuh: false, hasil: [], seq: 0, tCari: null };
+
+/* ======================================================== FLYER: UTIL */
+function flRapi(s) {
+  s = String(s || '').trim().replace(/\s+/g, ' ');
+  if (!s || s !== s.toUpperCase()) return s;           /* sudah huruf campuran: biarkan */
+  return cap(s).replace(FL_AKRONIM, m => m.toUpperCase());
+}
+function flAyah(v) {
+  let s = String(v || '').trim().replace(/\s+/g, ' ');
+  const re = /[\s(]*\b(ALM|ALMH|ALMARHUM|ALMARHUMAH)\b\.?\)?\s*$/i, alm = re.test(s);
+  if (alm) s = s.replace(re, '');
+  s = flRapi(s);
+  return s && alm ? s + ' (alm.)' : s;
+}
+function flJK(v) {
+  const s = String(v || '').toUpperCase();
+  if (s === '1' || s.charAt(0) === 'L') return '1';
+  if (s === '2' || s.charAt(0) === 'P') return '2';
+  return '';
+}
+/** '' = tidak diketahui, '1' = Islam, '0' = selain Islam */
+function flAgama(v) {
+  const s = String(v || '').toUpperCase().trim();
+  if (!s) return '';
+  return (s === '1' || s === 'ISLAM') ? '1' : '0';
+}
+function flIso(v) {
+  const d = parseTgl(v);
+  return d ? d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') : '';
+}
+function flP2(v) { const s = String(v || '').replace(/\D/g, ''); return s ? s.padStart(2, '0') : '-'; }
+function flAlamat(al, rt, rw, desa) {
+  const ds = String(desa || '').trim();
+  const desaTxt = ds && ds.toUpperCase() !== 'MERDEN' ? 'Desa ' + flRapi(ds) : 'Desa Merden';
+  const rtrw = (rt || rw) ? 'RT ' + flP2(rt) + '/RW ' + flP2(rw) : '';
+  return [flRapi(al), rtrw, desaTxt].filter(Boolean).join(', ');
+}
+function flTglPanjang(iso, umum) {
+  const d = parseTgl(iso);
+  return d ? (umum ? FL_HARI_U : FL_HARI)[d.getDay()] + ', ' + d.getDate() + ' ' + FL_BULAN[d.getMonth()] + ' ' + d.getFullYear() : String(iso || '');
+}
+function flJam(t) { const m = String(t || '').match(/(\d{1,2})[:.](\d{2})/); return m ? m[1].padStart(2, '0') + '.' + m[2] + ' WIB' : ''; }
+function flMakam(d) {
+  if (!d.tglMakam && !d.jamMakam && !d.tempatMakam) return ['', ''];
+  let a = 'Dimakamkan';
+  if (d.tglMakam) a += ' ' + flTglPanjang(d.tglMakam, d.umum);
+  if (d.jamMakam) a += (d.tglMakam ? ', ' : ' ') + 'pukul ' + flJam(d.jamMakam);
+  const b = d.tempatMakam ? 'di ' + d.tempatMakam : '';
+  if (!d.tglMakam && !d.jamMakam) return [a + ' ' + b, ''];
+  return [a, b];
+}
+function flPesan(t, jenis) {
+  const el = $('flMsg');
+  el.className = 'fl-msg' + (jenis ? ' ' + jenis : '');
+  el.textContent = t || '';
+  FL.pesanPenuh = false;
+}
+
+/* ======================================================== FLYER: SUMBER DATA */
+function flDariForm() {
+  return {
+    nama: val('J_NAMA'), jk: flJK(val('J_JK')), ayah: val('A_NAMA'), tglLahir: val('J_TGL_LAHIR'),
+    umur: val('J_UMUR') || umur(val('J_TGL_LAHIR'), val('J_TGL_MATI')),
+    alamat: flAlamat(val('J_ALAMAT'), val('J_RT'), val('J_RW'), val('J_DESA')),
+    tglWafat: flIso(val('J_TGL_MATI')), jamWafat: val('J_PUKUL'), tempatWafat: val('J_TEMPAT_MATI'),
+    agama: flAgama(val('J_AGAMA')), nik: val('J_NIK'),
+  };
+}
+function flDariData(d) {
+  d = d || {};
+  return {
+    nama: d.J_NAMA, jk: flJK(d.J_JK), ayah: d.A_NAMA, tglLahir: d.J_TGL_LAHIR,
+    umur: d.J_UMUR || umur(d.J_TGL_LAHIR, d.J_TGL_MATI),
+    alamat: flAlamat(d.J_ALAMAT, d.J_RT, d.J_RW, d.J_DESA),
+    tglWafat: flIso(d.J_TGL_MATI), jamWafat: d.J_PUKUL, tempatWafat: d.J_TEMPAT_MATI,
+    agama: flAgama(d.J_AGAMA), nik: d.J_NIK,
+  };
+}
+function flDariDb(r) {
+  return {
+    nama: r.NAMA, jk: flJK(r.JK), ayah: r.AYAH, tglLahir: r.TGL_LAHIR, umur: '',
+    alamat: flAlamat(r.ALAMAT || (r.DUSUN ? 'DUSUN ' + r.DUSUN : ''), r.RT, r.RW, 'MERDEN'),
+    tglWafat: '', jamWafat: '', tempatWafat: '', agama: flAgama(r.AGAMA), nik: r.NIK,
+  };
+}
+function flIsi(i) {
+  FL.kunci = (i.nik || '') + '|' + (i.nama || '');
+  FL.tglLahir = i.tglLahir || '';
+  setVal('fl_nama', flRapi(i.nama)); setVal('fl_jk', i.jk || ''); setVal('fl_ayah', flAyah(i.ayah));
+  $('fl_binOn').checked = true;                                   /* bin/binti tampil secara bawaan */
+  setVal('fl_tglWafat', i.tglWafat || ''); setVal('fl_jamWafat', i.jamWafat || '');
+  setVal('fl_umur', i.umur || (FL.tglLahir && i.tglWafat ? umur(FL.tglLahir, i.tglWafat) : ''));
+  setVal('fl_alamat', i.alamat || '');
+  setVal('fl_tempatWafat', flRapi(i.tempatWafat)); $('fl_tempatOn').checked = false;
+  ['fl_tglMakam', 'fl_jamMakam', 'fl_tempatMakam', 'fl_tambahan'].forEach(id => setVal(id, ''));
+  flSetJenis(i.agama === '0' ? 'umum' : 'islami');                /* nonmuslim -> template umum otomatis */
+  flPesan(i.agama === '0' ? 'Agama almarhum tercatat bukan Islam, jadi dipakai ucapan umum.' : '', i.agama === '0' ? 'warn' : '');
+  flJadwal();
+}
+function flBaca() {
+  const umum = val('fl_jenis') === 'umum';
+  return {
+    umum: umum, nama: val('fl_nama'), jk: val('fl_jk'), ayah: val('fl_ayah'), binOn: !umum && $('fl_binOn').checked,
+    umur: val('fl_umur').replace(/\D/g, ''), alamat: val('fl_alamat'), tglWafat: val('fl_tglWafat'), jamWafat: val('fl_jamWafat'),
+    tempatWafat: val('fl_tempatWafat'), tempatOn: $('fl_tempatOn').checked,
+    tglMakam: val('fl_tglMakam'), jamMakam: val('fl_jamMakam'), tempatMakam: val('fl_tempatMakam'), tambahan: val('fl_tambahan'),
+  };
+}
+function flMakamCepat(n) {
+  const w = parseTgl(val('fl_tglWafat'));
+  if (!w) { flPesan('Isi tanggal wafat dulu.', 'warn'); $('fl_tglWafat').focus(); return; }
+  w.setDate(w.getDate() + n);
+  setVal('fl_tglMakam', flIso(w)); flJadwal();
+}
+
+/* ======================================================== FLYER: ORNAMEN */
+function flBintang(x, cx, cy, r, isi, garis, lw) {
+  x.beginPath();
+  for (let i = 0; i < 16; i++) {
+    const a = -Math.PI / 2 + i * Math.PI / 8, rr = i % 2 ? r * 0.765 : r;
+    x.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a));
+  }
+  x.closePath();
+  if (isi) { x.fillStyle = isi; x.fill(); }
+  if (garis) { x.strokeStyle = garis; x.lineWidth = lw || 1.5; x.stroke(); }
+}
+function flWajik(x, cx, cy, r, isi) {
+  x.beginPath(); x.moveTo(cx, cy - r); x.lineTo(cx + r, cy); x.lineTo(cx, cy + r); x.lineTo(cx - r, cy); x.closePath();
+  x.fillStyle = isi; x.fill();
+}
+function flBunga(x, cx, cy, r, isi, tengah) {
+  x.save(); x.translate(cx, cy); x.fillStyle = isi;
+  for (let i = 0; i < 5; i++) {
+    x.save(); x.rotate(i * Math.PI * 2 / 5);
+    x.beginPath(); x.ellipse(0, -r * 0.55, r * 0.32, r * 0.55, 0, 0, Math.PI * 2); x.fill(); x.restore();
+  }
+  x.beginPath(); x.arc(0, 0, r * 0.22, 0, Math.PI * 2); x.fillStyle = tengah; x.fill();
+  x.restore();
+}
+function flGaris(x, t, y, w) {
+  x.save(); x.strokeStyle = t.acc; x.lineWidth = 1.5; x.globalAlpha = 0.85;
+  x.beginPath(); x.moveTo(540 - w, y); x.lineTo(540 - 24, y); x.moveTo(540 + 24, y); x.lineTo(540 + w, y); x.stroke();
+  x.restore();
+  if (t.orn === 'bunga') flWajik(x, 540, y, 8, t.acc);
+  else flBintang(x, 540, y, 11, t.acc);
+}
+function flSulur(x, t, y, tengah) {
+  x.save();
+  x.strokeStyle = t.acc; x.lineWidth = 2;
+  [[112, 468], [612, 968]].forEach(([a, b]) => {
+    x.beginPath();
+    for (let px = a; px <= b; px += 4) x.lineTo(px, y + 10 * Math.sin((px - a) / 90 * Math.PI * 2));
+    x.stroke();
+    for (let px = a + 22; px < b; px += 45) {
+      const naik = Math.sin((px - a) / 90 * Math.PI * 2) > 0;
+      x.save(); x.translate(px, y + (naik ? 10 : -10)); x.rotate(naik ? 0.6 : -0.6);
+      x.beginPath(); x.ellipse(0, naik ? 8 : -8, 5, 11, 0, 0, Math.PI * 2);
+      x.fillStyle = t.acc2 || t.acc; x.globalAlpha = 0.85; x.fill(); x.restore();
+    }
+  });
+  x.restore();
+  if (tengah) flBintang(x, 540, y, 16, t.acc);
+}
+function flOrnamen(x, t, W, H) {
+  x.save();
+  if (t.orn === 'khatam') {
+    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(34, 34, W - 68, H - 68);
+    x.globalAlpha = 0.7; x.lineWidth = 1.2; x.strokeRect(50, 50, W - 100, H - 100); x.globalAlpha = 1;
+    for (let px = 170; px <= W - 170; px += 56) { flWajik(x, px, 34, 7, t.acc); flWajik(x, px, H - 34, 7, t.acc); }
+    for (let py = 170; py <= H - 170; py += 56) { flWajik(x, 34, py, 7, t.acc); flWajik(x, W - 34, py, 7, t.acc); }
+    [[92, 92], [W - 92, 92], [92, H - 92], [W - 92, H - 92]].forEach(([px, py]) => {
+      flBintang(x, px, py, 40, t.acc); flBintang(x, px, py, 25, t.bg[0]); flBintang(x, px, py, 12, t.acc);
+    });
+  } else if (t.orn === 'kubah') {
+    x.strokeStyle = t.acc; x.lineWidth = 3; x.strokeRect(34, 34, W - 68, H - 68);
+    x.beginPath(); x.moveTo(62, H - 62); x.lineTo(62, 300);
+    x.bezierCurveTo(62, 120, 280, 58, 540, 50); x.bezierCurveTo(800, 58, W - 62, 120, W - 62, 300);
+    x.lineTo(W - 62, H - 62); x.closePath();
+    x.globalAlpha = 0.8; x.lineWidth = 1.5; x.stroke(); x.globalAlpha = 1;
+    if (!FL.logo) {
+      x.beginPath(); x.arc(540, 88, 15, 0, Math.PI * 2); x.fillStyle = t.acc; x.fill();
+      x.beginPath(); x.arc(546, 83, 12.5, 0, Math.PI * 2); x.fillStyle = t.bg[0]; x.fill();
+    }
+    [[100, H - 100], [W - 100, H - 100]].forEach(([px, py]) => { flBintang(x, px, py, 24, t.acc); flBintang(x, px, py, 13, t.bg[1]); });
+  } else if (t.orn === 'arabesk') {
+    x.strokeStyle = t.acc; x.lineWidth = 2.5; x.strokeRect(30, 30, W - 60, H - 60);
+    x.lineWidth = 1; x.strokeRect(44, 44, W - 88, H - 88);
+    flSulur(x, t, 74, !FL.logo); flSulur(x, t, H - 70, true);
+    [[44, 44], [W - 44, 44], [44, H - 44], [W - 44, H - 44]].forEach(([px, py]) => flBintang(x, px, py, 15, t.acc));
+  } else if (t.orn === 'girih') {
+    x.save();
+    x.beginPath(); x.rect(34, 34, W - 68, H - 68); x.rect(96, 96, W - 192, H - 192); x.clip('evenodd');
+    x.globalAlpha = 0.35;
+    for (let r = 0; r * 52 < H; r++) for (let px = 34 + (r % 2 ? 26 : 0); px < W; px += 52) flBintang(x, px, 34 + r * 52, 17, null, t.acc, 1.2);
+    x.restore();
+    x.strokeStyle = t.acc; x.lineWidth = 2.5; x.strokeRect(34, 34, W - 68, H - 68);
+    x.lineWidth = 1.5; x.strokeRect(96, 96, W - 192, H - 192);
+  } else {
+    /* bunga: ornamen netral untuk ucapan umum */
+    x.strokeStyle = t.acc; x.lineWidth = 2; x.strokeRect(36, 36, W - 72, H - 72);
+    x.globalAlpha = 0.7; x.lineWidth = 1; x.strokeRect(50, 50, W - 100, H - 100); x.globalAlpha = 1;
+    x.lineWidth = 3;
+    [[66, 66, 1, 1], [W - 66, 66, -1, 1], [66, H - 66, 1, -1], [W - 66, H - 66, -1, -1]].forEach(([px, py, sx, sy]) => {
+      x.beginPath(); x.moveTo(px, py + sy * 70); x.lineTo(px, py); x.lineTo(px + sx * 70, py); x.stroke();
+      flBunga(x, px + sx * 22, py + sy * 22, 16, t.acc2 || t.acc, t.bg[0]);
+    });
+    if (!FL.logo) flBunga(x, 540, 80, 18, t.acc2 || t.acc, t.bg[0]);
+  }
+  x.restore();
+}
+
+/* ======================================================== FLYER: TEKS */
+function flFont(x, gaya, ukuran, fam) { x.font = gaya + ' ' + ukuran + 'px ' + fam; }
+function flMuat(x, teks, gaya, fam, maks, min, lebar) {
+  let s = maks; flFont(x, gaya, s, fam);
+  while (s > min && x.measureText(teks).width > lebar) { s -= 2; flFont(x, gaya, s, fam); }
+  return s;
+}
+function flBungkus(x, teks, lebar) {
+  const kata = String(teks || '').split(/\s+/).filter(Boolean), baris = [];
+  let cur = '';
+  kata.forEach(k => {
+    const coba = cur ? cur + ' ' + k : k;
+    if (cur && x.measureText(coba).width > lebar) { baris.push(cur); cur = k; } else cur = coba;
+  });
+  if (cur) baris.push(cur);
+  return baris;
+}
+function flSeimbang(x, teks, lebar) {
+  const b = flBungkus(x, teks, lebar);
+  if (b.length !== 2) return b;
+  const kata = String(teks).split(/\s+/).filter(Boolean);
+  let terbaik = b, skor = Math.max(x.measureText(b[0]).width, x.measureText(b[1]).width);
+  for (let i = 1; i < kata.length; i++) {
+    const p = kata.slice(0, i).join(' '), q = kata.slice(i).join(' ');
+    const w = Math.max(x.measureText(p).width, x.measureText(q).width);
+    if (w <= lebar && w < skor) { skor = w; terbaik = [p, q]; }
+  }
+  return terbaik;
+}
+function flSpasi(x, v) { try { if ('letterSpacing' in x) x.letterSpacing = v; } catch (e) {} }
+function flArab(x, teks, warna, y, maks, min, gaya) {
+  flMuat(x, teks, gaya, FF_AR, maks, min, 880);
+  x.save(); x.direction = 'rtl'; x.textAlign = 'center'; x.fillStyle = warna; x.fillText(teks, 540, y); x.restore();
+}
+
+/* ======================================================== FLYER: GAMBAR */
+function flGambar() {
+  const c = $('flCanvas'); if (!c) return;
+  const x = c.getContext('2d'), W = 1080, H = 1350, cx = W / 2, LB = 860;
+  const t = FL_TPL[FL.tpl] || FL_TPL[0], d = flBaca(), P = d.jk === '2', kode = P ? '2' : '1', umum = t.jenis === 'umum';
+  x.save();
+  x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; flSpasi(x, '0px');
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, t.bg[0]); g.addColorStop(1, t.bg[1]);
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  flOrnamen(x, t, W, H);
+  if (FL.logo) {
+    const s = Math.min(90 / FL.logo.width, 96 / FL.logo.height), lw = FL.logo.width * s, lh = FL.logo.height * s;
+    x.drawImage(FL.logo, cx - lw / 2, 50, lw, lh);
+  }
+  x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+
+  /* ---- alat ukur: tinggi huruf diukur langsung dari font, bukan angka tebakan */
+  const F = (w, s, fam, ital) => (ital ? 'italic ' : '') + w + ' ' + s + 'px ' + fam;
+  const ukurLatin = f => { x.font = f; const m = x.measureText('HAgjpy'); return { a: m.actualBoundingBoxAscent || 0, d: m.actualBoundingBoxDescent || 0 }; };
+  const ukurArab = (f, s) => { x.save(); x.direction = 'rtl'; x.font = f; const m = x.measureText(s); x.restore(); return { a: m.actualBoundingBoxAscent || 0, d: m.actualBoundingBoxDescent || 0 }; };
+  const pasArab = (s, w, maks, min, lebar) => { let z = maks; x.save(); x.direction = 'rtl';
+    while (z > min) { x.font = F(w, z, FF_AR); if (x.measureText(s).width <= lebar) break; z -= 2; } x.restore(); return z; };
+  const tulis = (f, warna, s, sp) => y => { x.font = f; flSpasi(x, sp || '0px'); x.fillStyle = warna; x.fillText(s, cx, y); flSpasi(x, '0px'); };
+  const tulisArab = (f, warna, s) => y => { x.save(); x.font = f; x.direction = 'rtl'; x.textAlign = 'center'; x.fillStyle = warna; x.fillText(s, cx, y); x.restore(); };
+
+  /* ---- susunan atas: setiap baris = tinggi huruf (a, d) + jarak sebelum (gap).
+     Bila isian panjang, semua huruf bagian atas diperkecil sedikit demi sedikit (sk) sampai pas. */
+  let it = [];
+  const bangun = sk => {
+    it = [];
+    const Z = n => Math.round(n * sk);
+    const baris = (f, warna, s, gap, sp) => { const m = ukurLatin(f); it.push({ a: m.a, d: m.d, gap: gap, fn: tulis(f, warna, s, sp) }); };
+    const paragraf = (f, warna, s, gap, lh, maksBaris) => {
+      x.font = f; flSeimbang(x, s, LB).slice(0, maksBaris || 2).forEach((b, i) => baris(f, warna, b, i ? lh : gap));
+    };
+    const hiasan = (w, gap) => it.push({ a: 11, d: 11, gap: gap, fn: y => flGaris(x, t, y, w) });
+
+    baris(F('600', 27, FF_SANS), t.acc2 || t.acc, 'PEMERINTAH DESA MERDEN', 0, '6px');
+    baris(F('400', 21, FF_SANS), t.soft, 'Kecamatan Purwanegara \u00b7 Kabupaten Banjarnegara', 14);
+    hiasan(170, 28);
+    if (umum) {
+      baris(F('700', Z(64), FF_SERIF), t.ar, 'Turut Berduka Cita', 36);
+      baris(F('600', Z(30), FF_SERIF), t.ink, 'Telah meninggal dunia', 26);
+    } else {
+      const fI = F('700', pasArab(FL_ISTIRJA, '700', Z(82), 52, 840), FF_AR), mI = ukurArab(fI, FL_ISTIRJA);
+      it.push({ a: mI.a, d: mI.d, gap: 34, fn: tulisArab(fI, t.ar, FL_ISTIRJA) });
+      baris(F('500', Z(27), FF_SERIF, true), t.soft, "Innalillahi wa inna ilaihi raji'un", 30);
+      baris(F('600', Z(31), FF_SERIF), t.ink, 'Telah berpulang ke rahmatullah', 30);
+    }
+    baris(F('600', 21, FF_SANS), t.acc2 || t.acc, d.jk ? (P ? 'ALMARHUMAH' : 'ALMARHUM') : 'ALMARHUM / ALMARHUMAH', 42, '7px');
+    const nama = d.nama || 'Nama Almarhum';
+    let sN = Z(72); x.font = F('700', sN, FF_SERIF);
+    while (sN > 46 && x.measureText(nama).width > LB) { sN -= 2; x.font = F('700', sN, FF_SERIF); }
+    if (x.measureText(nama).width > LB) { sN = Z(54); paragraf(F('700', sN, FF_SERIF), t.ink, nama, 18, 10); }
+    else baris(F('700', sN, FF_SERIF), t.ink, nama, 18);
+    if (d.binOn && d.ayah) baris(F('500', Z(28), FF_SERIF, true), t.soft, (P ? 'binti ' : 'bin ') + d.ayah, 16);
+    const info = [d.umur ? 'Usia ' + d.umur + ' tahun' : '', d.alamat].filter(Boolean).join('  \u00b7  ');
+    if (info) paragraf(F('400', Z(23), FF_SANS), t.soft, info, 24, 12);
+    hiasan(110, 30);
+    if (d.tglWafat) paragraf(F('500', Z(25), FF_SANS), t.ink, 'Wafat pada ' + flTglPanjang(d.tglWafat, umum) + (d.jamWafat ? ', pukul ' + flJam(d.jamWafat) : ''), 30, 12);
+    if (d.tempatOn && d.tempatWafat) paragraf(F('400', Z(23), FF_SANS), t.soft, 'di ' + d.tempatWafat, 10, 12);
+    const mk = flMakam(Object.assign({}, d, { umum: umum }));
+    if (mk[0]) paragraf(F('500', Z(25), FF_SANS), t.ink, mk[0], 20, 12);
+    if (mk[1]) paragraf(F('400', Z(23), FF_SANS), t.soft, mk[1], 10, 12);
+    if (d.tambahan) paragraf(F('500', Z(23), FF_SERIF, true), t.soft, d.tambahan, 20, 12);
+  };
+
+  /* ---- susunan bawah: dihitung naik dari dasar flyer */
+  const fP = F('700', 40, FF_SERIF), mP = ukurLatin(fP), yP = H - 118;
+  const fT = F('400', 22, FF_SANS), mT = ukurLatin(fT), yT = yP - mP.a - 20 - mT.d;
+  const fH = F('400', 22, FF_SANS), mH = ukurLatin(fH); x.font = fH;
+  const har = flSeimbang(x, FL_HARAPAN[umum ? 'umum' : 'islami'][kode], 800), lhH = mH.a + mH.d + 13;
+  const yHarAkhir = yT - mT.a - 36 - mH.d, yHarAwal = yHarAkhir - (har.length - 1) * lhH;
+  let atasBawah = yHarAwal - mH.a, yDL = 0, yDA = 0, fDA = '', fDL = '';
+  if (!umum) {
+    fDL = F('500', 24, FF_SERIF, true); const mDL = ukurLatin(fDL);
+    yDL = atasBawah - 26 - mDL.d;
+    fDA = F('400', pasArab(FL_DOA[kode].ar, '400', 46, 32, 840), FF_AR); const mDA = ukurArab(fDA, FL_DOA[kode].ar);
+    yDA = yDL - mDL.a - 24 - mDA.d;
+    atasBawah = yDA - mDA.a;
+  }
+
+  /* ---- tata ruang atas: perkecil huruf bila perlu, lalu rentangkan jarak agar pas dan seimbang */
+  const yAwal = (FL.logo ? 152 : 112) + (t.orn === 'kubah' || t.orn === 'bunga' ? 14 : 0), ruang = (atasBawah - 46) - yAwal;
+  let k = 1, geser = 0, tinggiHuruf = 0, totalGap = 0;
+  for (let sk = 1; sk >= 0.78; sk -= 0.04) {
+    bangun(sk);
+    tinggiHuruf = it.reduce((s, i) => s + i.a + i.d, 0); totalGap = it.reduce((s, i) => s + i.gap, 0);
+    k = totalGap ? (ruang - tinggiHuruf) / totalGap : 1;
+    if (k >= 0.8) break;
+  }
+  FL.kepenuhan = k < 0.55;
+  const kMaks = umum ? 2.1 : 1.6;
+  if (k > kMaks) { geser = (ruang - tinggiHuruf - totalGap * kMaks) / 2; k = kMaks; }
+  k = Math.max(k, 0.55);
+  let y = yAwal + geser;
+  it.forEach((i, n) => { y += (n ? i.gap * k : 0) + i.a; i.fn(y); y += i.d; });
+
+  /* ---- gambar bagian bawah */
+  if (!umum) {
+    tulisArab(fDA, t.ar, FL_DOA[kode].ar)(yDA);
+    tulis(fDL, t.soft, FL_DOA[kode].lat)(yDL);
+  }
+  har.forEach((b, i) => tulis(fH, t.soft, b)(yHarAwal + i * lhH));
+  tulis(fT, t.soft, umum ? 'Dengan rasa duka yang mendalam,' : 'Turut berduka cita yang sedalam-dalamnya,')(yT);
+  tulis(fP, t.pt, 'Pemerintah Desa Merden')(yP);
+  x.restore();
+
+  if (FL.kepenuhan) { flPesan('Teks terlalu panjang sehingga bisa bertumpuk. Singkat alamat atau kalimat tambahan.', 'warn'); FL.pesanPenuh = true; }
+  else if (FL.pesanPenuh) flPesan('');
+}
+
+function flCaption(d) {
+  const P = d.jk === '2', kode = P ? '2' : '1', sap = d.jk ? (P ? 'Almarhumah' : 'Almarhum') : 'Almarhum/Almarhumah';
+  let s = (d.umum ? 'Telah meninggal dunia ' : 'Telah berpulang ke rahmatullah ') + sap + ' ' + (d.nama || '...') +
+    (d.binOn && d.ayah ? (P ? ' binti ' : ' bin ') + d.ayah : '');
+  if (d.umur) s += ', usia ' + d.umur + ' tahun';
+  if (d.alamat) s += ', ' + d.alamat;
+  if (d.tglWafat) s += ', pada ' + flTglPanjang(d.tglWafat, d.umum) + (d.jamWafat ? ' pukul ' + flJam(d.jamWafat) : '');
+  if (d.tempatOn && d.tempatWafat) s += ' di ' + d.tempatWafat;
+  const l = [d.umum ? 'Turut berduka cita.' : "Innalillahi wa inna ilaihi raji'un.", '', s + '.'];
+  const mk = flMakam(d);
+  if (mk[0]) l.push('', mk.filter(Boolean).join(' ') + '.');
+  if (d.tambahan) l.push('', d.tambahan);
+  l.push('');
+  if (!d.umum) l.push(FL_DOA[kode].lat + '.');
+  l.push(FL_HARAPAN[d.umum ? 'umum' : 'islami'][kode], '',
+    d.umum ? 'Dengan rasa duka yang mendalam,' : 'Turut berduka cita yang sedalam-dalamnya,', 'Pemerintah Desa Merden');
+  return l.join('\n');
+}
+
+function flJadwal() {
+  clearTimeout(FL.timer);
+  FL.timer = setTimeout(() => { flGambar(); $('flCap').value = flCaption(flBaca()); }, 120);
+}
+
+/* ======================================================== FLYER: TEMPLATE */
+function flRenderTpl() {
+  const jenis = val('fl_jenis') || 'islami';
+  $('flTpl').innerHTML = FL_TPL.map((t, i) => t.jenis !== jenis ? '' :
+    `<button type="button" aria-pressed="${i === FL.tpl}" onclick="flPilihTpl(${i})" title="${esc(t.nama)}">
+      <span class="sw ${t.jenis === 'umum' ? 'lt' : 'ar'}" style="background:linear-gradient(${t.bg[0]},${t.bg[1]});color:${t.ar}">${t.jenis === 'umum' ? 'Duka Cita' : '\u0625\u0650\u0646\u064e\u0651\u0627 \u0644\u0650\u0644\u0651\u0670\u0647\u0650'}</span>
+      <span class="nm">${esc(t.nama)}</span></button>`).join('');
+}
+function flPilihTpl(i) {
+  FL.tpl = i; FL.pilih[FL_TPL[i].jenis] = i;
+  store(FL_TPL[i].jenis === 'umum' ? 'fl_tpl_u' : 'fl_tpl', String(i));
+  flRenderTpl(); flGambar();
+}
+function flSetJenis(j) {
+  j = j === 'umum' ? 'umum' : 'islami';
+  setVal('fl_jenis', j);
+  FL.tpl = FL.pilih[j];
+  $('flBinRow').hidden = j === 'umum';
+  flRenderTpl();
+}
+
+/* ======================================================== FLYER: CARI DI DATABASE */
+function flCari() {
+  const q = val('flQ'), box = $('flRes'), dg = q.replace(/[\s.\-]/g, '');
+  if (q.length < 3 && !/^\d{6,}$/.test(dg)) { box.innerHTML = ''; return; }
+  const my = ++FL.seq;
+  box.innerHTML = '<div class="res-msg">Mencari\u2026</div>';
+  runA('cariWarga', q).then(list => {
+    if (my !== FL.seq) return;
+    FL.hasil = list;
+    box.innerHTML = list.length ? list.map((r, i) => `<button type="button" class="res" onclick="flPilih(${i})">
+        <b>${esc(r.NAMA)}</b><span class="nik">${esc(r.NIK)}</span>
+        <small>${esc(cap(r.JK))}, lahir ${esc(r.TGL_LAHIR)}, RT ${esc(r.RT)}/RW ${esc(r.RW)} ${esc(cap(r.DUSUN))}</small></button>`).join('')
+      : '<div class="res-msg">Tidak ditemukan. Isi data langsung di bagian Data almarhum.</div>';
+  }).catch(e => { if (my === FL.seq) box.innerHTML = `<div class="res-msg" style="color:var(--err)">${esc(e.message)}</div>`; });
+}
+function flPilih(i) {
+  const r = FL.hasil[i]; if (!r) return;
+  flIsi(flDariDb(r));
+  $('flRes').innerHTML = ''; setVal('flQ', ''); $('flCariBox').open = false;
+  $('fl_tglWafat').focus();
+}
+
+/* ======================================================== FLYER: BUKA, KEMBALI, UNDUH */
+function bukaFlyer(sumber, data) {
+  FL.next = { sumber: sumber, data: data };
+  if (!TOKEN) { TUJUAN = 'flyer'; bukaLogin('Pembuatan flyer hanya untuk petugas desa.'); return; }
+  showView('flyer');
+}
+function flMulai() {
+  const n = FL.next; FL.next = null;
+  let info = null;
+  if (n) {
+    FL.src = n.sumber === 'riwayat' ? 'riwayat' : 'form';
+    if (n.sumber === 'riwayat') info = flDariData(n.data);
+    else if (val('J_NAMA')) info = flDariForm();
+  }
+  $('flBack').textContent = FL.src === 'riwayat' ? 'Kembali ke riwayat' : 'Kembali ke surat';
+  if (info && (info.nik || '') + '|' + (info.nama || '') !== FL.kunci) flIsi(info);
+  $('flCariBox').open = !val('fl_nama');
+  flSiapkan();
+  flGambar(); $('flCap').value = flCaption(flBaca());
+}
+function flKembali() { showView(FL.src === 'riwayat' ? 'riwayat' : 'form'); }
+
+function flSiapkan() {
+  if (FL.siap) return;
+  FL.siap = true;
+  if (document.fonts && document.fonts.load) {
+    Promise.all([
+      document.fonts.load('700 80px Amiri', '\u0625\u0646\u0627'), document.fonts.load('400 44px Amiri', '\u0627\u0644\u0644\u0647\u0645'),
+      document.fonts.load('700 70px "Playfair Display"'), document.fonts.load('600 34px "Playfair Display"'),
+      document.fonts.load('italic 500 30px "Playfair Display"'),
+      document.fonts.load('600 30px "Plus Jakarta Sans"'), document.fonts.load('400 24px "Plus Jakarta Sans"'),
+    ]).then(() => flGambar()).catch(() => flGambar());
+  }
+  runA('getFlyerInit').then(r => {
+    if (!r || !r.logo) return;
+    const im = new Image();
+    im.onload = () => { FL.logo = im; flGambar(); };
+    im.src = r.logo;
+  }).catch(() => {});
+}
+
+function flUnduhLokal(b64, nama) {
+  const bin = atob(b64), arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([arr], { type: 'image/jpeg' }));
+  const a = document.createElement('a'); a.href = url; a.download = nama; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 3000);
+}
+
+/** Unduh JPG langsung ke HP/laptop. Tidak disimpan ke Drive. */
+function flUnduh() {
+  const d = flBaca();
+  if (!d.nama) { flPesan('Nama almarhum belum diisi.', 'err'); $('fl_nama').focus(); return; }
+  if (!d.jk) { flPesan('Pilih jenis kelamin agar sapaan dan doa tepat.', 'err'); $('fl_jk').focus(); return; }
+  if (!d.tglWafat) { flPesan('Tanggal wafat belum diisi.', 'err'); $('fl_tglWafat').focus(); return; }
+  clearTimeout(FL.timer); flGambar();
+  if (FL.kepenuhan) return;
+  let url;
+  try { url = $('flCanvas').toDataURL('image/jpeg', 0.9); }
+  catch (e) { flPesan('Gambar gagal dibuat: ' + e.message, 'err'); return; }
+  const file = 'Flyer_Duka_' + d.nama.replace(/[^\w ]/g, '').trim().replace(/\s+/g, '_') + '_' + d.tglWafat.replace(/-/g, '') + '.jpg';
+  flUnduhLokal(url.slice(url.indexOf(',') + 1), file);
+  flPesan('JPG terunduh. Kirim lewat WhatsApp bersama teks ucapan.', 'ok');
+}
+
+function flSalin() {
+  const t = $('flCap'); t.focus(); t.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  if (ok) { flPesan('Teks disalin. Tempel di WhatsApp bersama gambar.', 'ok'); return; }
+  if (navigator.clipboard) navigator.clipboard.writeText(t.value)
+    .then(() => flPesan('Teks disalin. Tempel di WhatsApp bersama gambar.', 'ok'))
+    .catch(() => flPesan('Tidak bisa menyalin otomatis. Tekan lama teks, lalu pilih Salin.', 'warn'));
+  else flPesan('Tidak bisa menyalin otomatis. Tekan lama teks, lalu pilih Salin.', 'warn');
+}
+function flWA() { window.open('https:\/\/wa.me/?text=' + encodeURIComponent($('flCap').value), '_blank', 'noopener'); }
+
+/* ======================================================== FLYER: PASANG KE HALAMAN */
+(function flPasang() {
+  const a = parseInt(load('fl_tpl'), 10), b = parseInt(load('fl_tpl_u'), 10);
+  FL.pilih.islami = FL_TPL[a] && FL_TPL[a].jenis === 'islami' ? a : 0;   /* bawaan: Hijau Zamrud */
+  FL.pilih.umum = FL_TPL[b] && FL_TPL[b].jenis === 'umum' ? b : 4;       /* bawaan: Umum Gelap */
+  flSetJenis('islami');
+
+  /* menu di header */
+  const nb = $('nvFlyer');   /* tombol menu sudah ada di header (HTML) */
+
+  /* tombol di panel kanan form surat */
+  const bf = document.createElement('button');
+  bf.className = 'btn btn-g btn-big btn-flyer'; bf.id = 'btnFlyer'; bf.type = 'button'; bf.textContent = 'Buat Flyer WA';
+  bf.onclick = () => bukaFlyer('form');
+  $('btnGen').insertAdjacentElement('afterend', bf);
+
+  /* tombol di kotak "Surat selesai dibuat" */
+  const bd = document.createElement('button');
+  bd.className = 'btn btn-g btn-sm'; bd.type = 'button'; bd.textContent = 'Buat Flyer WA';
+  bd.onclick = () => bukaFlyer('form');
+  $('doneBox').querySelector('.row').appendChild(bd);
+
+  /* navigasi: tambah tampilan "flyer" */
+  const svAsli = showView;
+  showView = function (v) {
+    if (v !== 'flyer') { nb.setAttribute('aria-current', 'false'); return svAsli(v); }
+    document.body.dataset.view = 'flyer';
+    ['nvDash', 'nvForm', 'nvRiwayat'].forEach(id => $(id).setAttribute('aria-current', 'false'));
+    nb.setAttribute('aria-current', 'page');
+    window.scrollTo(0, 0);
+    flMulai();
+  };
+
+  /* tombol flyer aktif bila nama jenazah sudah ada */
+  const raAsli = refreshAll;
+  refreshAll = function () { raAsli(); bf.disabled = !val('J_NAMA'); };
+  bf.disabled = !val('J_NAMA');
+
+  /* tombol flyer di detail Riwayat */
+  const rdAsli = renderDetail;
+  renderDetail = function (xd) {
+    rdAsli(xd);
+    if (!xd || !xd.data) return;
+    const act = document.querySelector('#rwDetail .dt-head .act');
+    if (!act) return;
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-p btn-sm'; btn.type = 'button'; btn.textContent = 'Buat Flyer WA';
+    btn.onclick = () => bukaFlyer('riwayat', xd.data);
+    act.prepend(btn);
+  };
+
+  /* perubahan isian -> gambar ulang */
+  const vf = $('viewFlyer');
+  vf.addEventListener('input', e => {
+    if (e.target.id === 'flQ') { clearTimeout(FL.tCari); FL.tCari = setTimeout(flCari, 380); return; }
+    if (e.target.id === 'fl_umur') { const v = e.target.value.replace(/\D/g, '').slice(0, 3); if (v !== e.target.value) e.target.value = v; }
+    if (e.target.id === 'fl_tglWafat' && FL.tglLahir) setVal('fl_umur', umur(FL.tglLahir, e.target.value));
+    flJadwal();
+  });
+  vf.addEventListener('change', e => {
+    if (e.target.id === 'fl_jenis') flSetJenis(e.target.value);
+    flJadwal();
+  });
+  $('flQ').addEventListener('keydown', e => { if (e.key === 'Enter') { clearTimeout(FL.tCari); flCari(); } });
+})();
+</script>

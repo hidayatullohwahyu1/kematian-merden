@@ -1,0 +1,12 @@
+# Data warga & hasil surat: JANGAN di-commit (repo publik)
+SK KEMATIAN/
+*.xlsx
+*.xls
+*.csv
+~$*
+
+# Sistem
+Thumbs.db
+desktop.ini
+.DS_Store
+.claude/
