@@ -525,6 +525,19 @@
   .panel.step .step-desc{margin-bottom:6px}
   @media (max-width:640px){.panel.step .step-h{padding-left:16px}}
 
+  /* rekomendasi pelapor & saksi */
+  .rekom{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;border-radius:var(--r-md);
+    background:#F1F7F3;border:1px dashed #9BC7AE}
+  .rekom[hidden],.rekom-all[hidden]{display:none}
+  .rekom .ic{width:30px;height:30px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;flex:none}
+  .rekom .ic svg{width:16px;height:16px}
+  .rekom .tx{flex:1 1 160px;min-width:0;font-size:13px;color:var(--muted);line-height:1.35}
+  .rekom .tx b{display:block;color:var(--ink);font-size:14.5px;overflow-wrap:anywhere}
+  .rekom .btn{flex:none}
+  .rekom-all{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;border-radius:var(--r-md);
+    background:var(--ok-soft);color:#1F5C3F;font-size:13.5px;line-height:1.4}
+  .rekom-all .tx{flex:1 1 200px;min-width:0}
+
   /* bilah bawah HP */
   @media (max-width:980px){
     .mbar .t{min-width:0}
@@ -696,7 +709,8 @@
           <div class="quick"><button type="button" onclick="setTglMati(0)">Hari ini</button><button type="button" onclick="setTglMati(1)">Kemarin</button></div></div>
         <div><label class="f" for="J_PUKUL">Pukul (WIB)</label><input class="in" type="time" id="J_PUKUL" data-k></div>
         <div class="c2"><label class="f" for="J_TEMPAT_MATI">Tempat meninggal</label><input class="in up" id="J_TEMPAT_MATI" data-k data-max="31" list="dlTempat" placeholder="Rumah, rumah sakit, ..."><div class="count"></div>
-          <datalist id="dlTempat"><option value="RUMAH"><option value="RUMAH SAKIT"><option value="RSUD HJ. ANNA LASMANAH BANJARNEGARA"><option value="PUSKESMAS PURWANEGARA 1"><option value="DALAM PERJALANAN"></datalist></div>
+          <div class="quick" id="qTempat"><button type="button" onclick="setTempat('BANJARNEGARA')">Banjarnegara</button></div>
+          <datalist id="dlTempat"><option value="BANJARNEGARA"><option value="RUMAH"><option value="RUMAH SAKIT"><option value="RSUD HJ. ANNA LASMANAH BANJARNEGARA"><option value="PUSKESMAS PURWANEGARA 1"><option value="DALAM PERJALANAN"></datalist></div>
         <div class="c4"><label class="f">Sebab kematian</label><div class="chips" id="chSebab"></div></div>
         <div class="c4"><label class="f">Yang menerangkan</label><div class="chips" id="chMenerangkan"></div></div>
         <div><label class="f" for="J_ANAK_KE">Anak ke-</label><input class="in" id="J_ANAK_KE" data-k inputmode="numeric" maxlength="2"></div>
@@ -719,6 +733,10 @@
     <div class="step-h"><span class="num">4</span><h2>Pelapor dan saksi</h2><span class="req">pelapor wajib</span></div>
     <p class="step-desc">Pelapor biasanya keluarga almarhum. Ketuk tombol di daftar anggota keluarga untuk mengisi cepat.</p>
     <div class="step-b">
+      <div class="rekom-all" id="rkAll" hidden>
+        <div class="tx" id="rkAllTx"></div>
+        <button class="btn btn-p btn-sm" type="button" id="rkAllBtn" onclick="pakaiSemuaRekom()"><span class="spin"></span>Pakai semua rekomendasi</button>
+      </div>
       <div class="fam" id="fam" hidden></div>
       <div class="who"><h3>Pelapor <span class="req">wajib</span></h3><div id="person-P_"></div></div>
       <div class="who"><h3>Saksi I <span class="opt">boleh kosong</span></h3><div id="person-S1_"></div></div>
@@ -903,6 +921,7 @@ function renderPerson(p){
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input class="in" id="q_${p}" placeholder="${cfg.ph}" autocomplete="off" aria-label="${cfg.ph}">
       </div>
+      <div class="rekom" id="rk_${p}" hidden></div>
       <div class="search-row"><span>Bukan warga Merden atau tidak ditemukan?</span><button class="btn btn-g btn-sm" type="button" onclick="manualDari('${p}')">Isi manual</button></div>
       <div class="results" id="r_${p}" role="listbox"></div>
     </div>
@@ -1128,6 +1147,82 @@ function terapkanOrtu_(p, nama, r){
   } catch (e) { $('tg_' + p).innerHTML = ''; }
 }
 
+/* ======================================================== REKOMENDASI
+ * Data dari server (berkas Rekomendasi.gs di Apps Script). Pelapor: untuk semua surat.
+ * Saksi I & II: menurut RW almarhum. Hanya saran, petugas mengetuk "Pakai".
+ */
+function rwJenazah(){
+  const desa = val('J_DESA').toUpperCase();
+  if (desa && desa !== 'MERDEN') return 0;           // almarhum bukan warga Merden: tanpa rekomendasi saksi
+  return parseInt(val('J_RW'), 10) || 0;
+}
+function rekomUntuk(p){
+  const R = INIT && INIT.rekomendasi; if (!R) return null;
+  let r = null;
+  if (p === 'P_') r = R.pelapor || null;
+  else if (p === 'S1_' || p === 'S2_') {
+    const rw = rwJenazah(), g = rw && (R.saksi || []).find(x => (x.rw || []).indexOf(rw) >= 0);
+    r = g ? g[p === 'S1_' ? 's1' : 's2'] : null;
+  }
+  if (!r || !r.nik) return null;
+  // jangan sarankan orang yang sudah dipakai di peran lain (atau almarhum sendiri)
+  const dipakai = ['J_','P_','S1_','S2_'].filter(x => x !== p).map(x => val(fid(x, 'NIK')));
+  return dipakai.indexOf(r.nik) >= 0 ? null : r;
+}
+var REKOM_KUNCI = '';   // var: aman bila refreshAll terpanggil lebih awal
+function renderRekom(){
+  const kunci = ['P_','S1_','S2_'].map(p => { const r = rekomUntuk(p); return p + ($('person-' + p).dataset.mode) + (r ? r.nik : ''); }).join('|') + rwJenazah();
+  if (kunci === REKOM_KUNCI) return;
+  REKOM_KUNCI = kunci;
+  const kosong = [];
+  ['P_','S1_','S2_'].forEach(p => {
+    const box = $('rk_' + p), r = rekomUntuk(p), tampil = r && $('person-' + p).dataset.mode === 'empty';
+    box.hidden = !tampil;
+    if (!tampil) { box.innerHTML = ''; return; }
+    kosong.push(p);
+    const alasan = p === 'P_' ? 'Rekomendasi pelapor' : 'Rekomendasi untuk warga RW ' + rwJenazah();
+    box.innerHTML = `<span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></span>
+      <div class="tx">${esc(alasan)}<b>${esc(r.nama)}</b>NIK ${esc(r.nik)}</div>
+      <button class="btn btn-p btn-sm" type="button" onclick="pakaiRekom('${p}', this)"><span class="spin"></span>Pakai</button>`;
+  });
+  const rw = rwJenazah(), adaSaksi = INIT && INIT.rekomendasi && (INIT.rekomendasi.saksi || []).some(x => (x.rw || []).indexOf(rw) >= 0);
+  $('rkAll').hidden = kosong.length < 2;
+  if (kosong.length >= 2) $('rkAllTx').textContent = 'Ada ' + kosong.length + ' rekomendasi' +
+    (val('J_NAMA') && rw ? (adaSaksi ? ' untuk almarhum warga RW ' + rw : '') : '') + '. Ketuk untuk mengisi sekaligus.';
+}
+/** Ambil data lengkap orang yang direkomendasikan dari DATA_KK; bila tidak ada, isi NIK & nama saja. */
+async function pakaiRekom(p, btn){
+  const r = rekomUntuk(p); if (!r) return;
+  if (btn) { btn.classList.add('busy'); btn.disabled = true; }
+  try {
+    const list = await runA('cariWarga', r.nik);
+    const w = (list || []).find(x => x.NIK === r.nik);
+    if (w) {
+      isiOrang(p, w);
+      $('tg_' + p).innerHTML = '<span class="tag ok">Dari rekomendasi. Periksa kembali.</span>';
+    } else {
+      kosongkan(p); setVal(fid(p, 'NIK'), r.nik); setVal(fid(p, 'NAMA'), r.nama);
+      $('person-' + p).dataset.manual = '1'; setMode(p, 'filled');
+      $('tg_' + p).innerHTML = '<span class="tag warn">Dari rekomendasi, tetapi tidak ada di basis data. Lengkapi lewat Ubah.</span>';
+    }
+    if (p === 'S1_' || p === 'S2_') { const u = val(fid(p, 'UMUR')); if (!u && w) setVal(fid(p, 'UMUR'), umur(w.TGL_LAHIR)); }
+    refreshAll();
+    return true;
+  } catch (e) {
+    toast('Rekomendasi gagal dipakai: ' + e.message);
+    if (btn) { btn.classList.remove('busy'); btn.disabled = false; }
+    return false;
+  }
+}
+async function pakaiSemuaRekom(){
+  const b = $('rkAllBtn'); b.classList.add('busy'); b.disabled = true;
+  const ps = ['P_','S1_','S2_'].filter(p => rekomUntuk(p) && $('person-' + p).dataset.mode === 'empty');
+  const hasil = await Promise.all(ps.map(p => pakaiRekom(p, $('rk_' + p).querySelector('button'))));
+  b.classList.remove('busy'); b.disabled = false;
+  if (hasil.every(Boolean)) toast(ps.length + ' isian terisi dari rekomendasi. Periksa kembali.');
+}
+function setTempat(t){ setVal('J_TEMPAT_MATI', t); refreshAll(); }
+
 /* ======================================================== KELUARGA */
 function renderFam(){
   const box = $('fam');
@@ -1164,6 +1259,7 @@ function refreshAll(){
   ];
   $('check').innerHTML = items.map(([t, ok, wajib]) => `<li class="${ok?'ok':(wajib?'need':'')}"><span class="dot"></span>${t}<span class="opt">${ok ? '' : (wajib ? 'wajib' : 'boleh kosong')}</span></li>`).join('');
   $('conflicts').innerHTML = cekBentrok().map(w => `<li>${esc(w)}</li>`).join('');
+  renderRekom();
   const siap = items.filter(i => i[2]).every(i => i[1]);
   const kurang = kurangWajib();
   // Setelah surat jadi, kunci tombol agar tidak terbit surat ganda; lanjut lewat "Surat baru"
@@ -1425,6 +1521,9 @@ function loadInit(){
     if (!val('TGL_SURAT_ISO')) $('TGL_SURAT_ISO').value = init.hariIni;
     $('ttd').innerHTML = init.penandatangan.map((p, i) => `<option value="${i}">${esc(cap(p.nama))}, ${esc(cap(p.jabatan.replace(/\s+MERDEN$/, '')))}${p.an ? ' (a.n.)' : ''}</option>`).join('');
     const t = load('skk_ttd'); if (t !== null && init.penandatangan[+t]) $('ttd').value = t;
+    const tm = (init.rekomendasi && init.rekomendasi.tempatMati) || ['BANJARNEGARA'];
+    $('qTempat').innerHTML = tm.map(t => `<button type="button" onclick="setTempat('${esc(t).replace(/'/g, '')}')">${esc(cap(t))}</button>`).join('');
+    REKOM_KUNCI = '';
     renderHist(init.riwayat); refreshAll(); tawarkanDraf();
     if (!val('J_NAMA')) fokus('q_J_');
   }).catch(e => {

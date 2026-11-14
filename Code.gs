@@ -53,7 +53,13 @@ function getInit(token) {
     hariIni: Utilities.formatDate(now, CFG.TZ, 'yyyy-MM-dd'),
     riwayat: getRiwayat_(8, rows),
     petugas: sesi.nama,
+    rekomendasi: rekomendasi_(),
   };
+}
+
+/** Rekomendasi pelapor/saksi dari berkas Rekomendasi.gs (tidak ada di GitHub). Tidak ada = null. */
+function rekomendasi_() {
+  try { return REKOMENDASI; } catch (e) { return null; }
 }
 
 function cekKonfigurasi_() {

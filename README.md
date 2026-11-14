@@ -22,6 +22,13 @@ seperti aplikasi di HP Android.
    menyimpan file ke folder arsip Drive, mencatat ke spreadsheet log, lalu file diunduh di browser.
 4. Dashboard publik hanya menampilkan angka agregat (tanpa nama/NIK).
 
+## Rekomendasi pelapor & saksi
+
+Aplikasi menyarankan pelapor (untuk semua surat) dan Saksi I/II menurut RW almarhum, serta
+pilihan cepat tempat meninggal. Datanya ada di berkas **`Rekomendasi.gs`** yang hanya disimpan di
+proyek Apps Script, **tidak di GitHub** (berisi NIK). Format dan contohnya: `Rekomendasi.contoh.gs`.
+Untuk mengubah rekomendasi, edit berkas Rekomendasi di editor Apps Script, simpan, lalu deploy versi baru.
+
 ## Pemasangan Apps Script
 
 1. Salin `Code.gs`, `XlsxFiller.gs`, `Index.html`, `Flyer.html` ke proyek Apps Script.

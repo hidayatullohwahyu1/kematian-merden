@@ -9,6 +9,15 @@
     { NIK: '3304015208750004', NAMA: 'SRI WAHYUNINGSIH', TEMPAT_LAHIR: 'BANJARNEGARA', TGL_LAHIR: '12-08-1975', JK: 'PEREMPUAN', AGAMA: 'ISLAM', PEKERJAAN: 'GURU', RT: '002', RW: '008', DUSUN: 'KARANGKAJEN', NO_KK: '3304010000000001', NAMA_KEPALA: 'SUKARDI WIRYO ATMOJO', HUBUNGAN: 'ANAK', AYAH: 'SUKARDI WIRYO ATMOJO', IBU: 'SUMIATI', ALAMAT: '' },
     { NIK: '3304010707800005', NAMA: 'KARTO', TEMPAT_LAHIR: 'BANJARNEGARA', TGL_LAHIR: '07-07-1910', JK: 'LAKI-LAKI', AGAMA: 'ISLAM', PEKERJAAN: 'PETANI', RT: '001', RW: '001', DUSUN: 'MERDEN TENGAH', NO_KK: '3304010000000009', NAMA_KEPALA: 'KARTO', HUBUNGAN: 'KEPALA KELUARGA', AYAH: '', IBU: '', ALAMAT: '' },
   ];
+  // rekomendasi FIKTIF (data asli ada di Rekomendasi.gs, tidak di GitHub)
+  var REKOM = { tempatMati: ['BANJARNEGARA'], pelapor: { nik: '3304010000000201', nama: 'SITI PELAPOR' },
+    saksi: [ { rw: [1], s1: { nik: '3304010000000211', nama: 'SAKSI SATU RW SATU' }, s2: { nik: '3304010000000212', nama: 'SAKSI DUA RW SATU' } },
+             { rw: [3, 4], s1: { nik: '3304010000000231', nama: 'SAKSI SATU RW TIGA' }, s2: { nik: '3304010000000299', nama: 'TIDAK ADA DI DATABASE' } } ] };
+  WARGA.push(
+    { NIK: '3304010000000201', NAMA: 'SITI PELAPOR', TEMPAT_LAHIR: 'BANJARNEGARA', TGL_LAHIR: '04-12-1978', JK: 'PEREMPUAN', AGAMA: 'ISLAM', PEKERJAAN: 'PERANGKAT DESA', RT: '001', RW: '002', DUSUN: 'KARANGKAJEN', NO_KK: '3304010000000020', NAMA_KEPALA: 'SITI PELAPOR', HUBUNGAN: 'KEPALA KELUARGA', AYAH: '', IBU: '', ALAMAT: '' },
+    { NIK: '3304010000000211', NAMA: 'SAKSI SATU RW SATU', TEMPAT_LAHIR: 'BANJARNEGARA', TGL_LAHIR: '14-03-1979', JK: 'LAKI-LAKI', AGAMA: 'ISLAM', PEKERJAAN: 'WIRASWASTA', RT: '002', RW: '001', DUSUN: 'MERDEN TENGAH', NO_KK: '3304010000000021', NAMA_KEPALA: 'SAKSI SATU RW SATU', HUBUNGAN: 'KEPALA KELUARGA', AYAH: '', IBU: '', ALAMAT: '' },
+    { NIK: '3304010000000212', NAMA: 'SAKSI DUA RW SATU', TEMPAT_LAHIR: 'BANJARNEGARA', TGL_LAHIR: '18-02-1977', JK: 'LAKI-LAKI', AGAMA: 'ISLAM', PEKERJAAN: 'PETANI', RT: '003', RW: '001', DUSUN: 'MERDEN TENGAH', NO_KK: '3304010000000022', NAMA_KEPALA: 'SAKSI DUA RW SATU', HUBUNGAN: 'KEPALA KELUARGA', AYAH: '', IBU: '', ALAMAT: '' }
+  );
   var LOG = [
     { row: 2, nomor: '400.12.3.1/ 013 / XI / 2026', tglSurat: '10 November 2026', nik: '3304010000000011', nama: 'MARYATUN BINTI SASTRO WIHARJO', tglMati: '09-11-2026', pelapor: 'SLAMET RIYADI', dusun: 'Rawawungu', jk: '2', umur: '81', petugas: 'ADMIN', waktu: '2026-11-10 09:12:00', catatan: 'Surat sudah diambil keluarga (11-11-2026)', url: 'https://drive.google.com/' },
     { row: 3, nomor: '400.12.3.1/ 014 / XI / 2026', tglSurat: '12 November 2026', nik: '3304010000000012', nama: 'TARNO', tglMati: '12-11-2026', pelapor: 'WAGIMAN', dusun: 'Merden Wetan', jk: '1', umur: '67', petugas: 'ADMIN', waktu: '2026-11-12 13:40:00', catatan: '', url: 'https://drive.google.com/' },
@@ -20,7 +29,7 @@
     login: function (pw) { if (pw !== MOCK_PW) throw new Error('Password salah. Sisa percobaan: 4.'); return { token: TOK, nama: 'ADMIN' }; },
     logout: function () { return true; },
     cekSesi: function (t) { return { ok: t === TOK, nama: 'ADMIN' }; },
-    getInit: function (t) { cek(t); return { penandatangan: [{ nama: 'SADAR', jabatan: 'KEPALA DESA MERDEN', an: '' }, { nama: 'MUCHAMAD AFIFUDIN', jabatan: 'SEKRETARIS DESA', an: 'a.n. KEPALA DESA MERDEN' }], nomorBerikut: '015', hariIni: '2026-11-14', riwayat: LOG.slice().reverse().map(function (r) { return { nomor: r.nomor, nama: r.nama, url: r.url }; }), petugas: 'ADMIN' }; },
+    getInit: function (t) { cek(t); return { penandatangan: [{ nama: 'SADAR', jabatan: 'KEPALA DESA MERDEN', an: '' }, { nama: 'MUCHAMAD AFIFUDIN', jabatan: 'SEKRETARIS DESA', an: 'a.n. KEPALA DESA MERDEN' }], nomorBerikut: '015', hariIni: '2026-11-14', riwayat: LOG.slice().reverse().map(function (r) { return { nomor: r.nomor, nama: r.nama, url: r.url }; }), petugas: 'ADMIN', rekomendasi: REKOM }; },
     cariWarga: function (t, q) { cek(t); q = String(q).toUpperCase(); return WARGA.filter(function (w) { return w.NAMA.indexOf(q) >= 0 || w.NIK.indexOf(q) >= 0 || w.NO_KK === q; }); },
     anggotaKK: function (t, kk) { cek(t); return WARGA.filter(function (w) { return w.NO_KK === kk; }); },
     cariOrangTua: function (t, nama) { cek(t); return { cocok: WARGA.filter(function (w) { return w.NAMA === String(nama).toUpperCase(); }), lain: [] }; },
