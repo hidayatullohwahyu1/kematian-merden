@@ -772,9 +772,9 @@ function flSiapkan() {
   if (!document.getElementById('flFont')) {       /* muat huruf kartu hanya saat dibutuhkan */
     const l = document.createElement('link');
     l.id = 'flFont'; l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Aref+Ruqaa:wght@700&family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,700;1,500&family=Great+Vibes&display=swap';
+    l.href = 'https:\/\/fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Aref+Ruqaa:wght@700&family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,700;1,500&family=Great+Vibes&display=swap';
     l.onload = () => flSiapkanHuruf();
-    document.head.appendChild(l);
+    document.head.appendChild(l);   /* alamat ditulis https:\/\/ karena Apps Script menghapus teks setelah dua garis miring */
   }
   flSiapkanHuruf();
   runA('getFlyerInit').then(r => {

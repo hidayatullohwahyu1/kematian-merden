@@ -57,6 +57,14 @@ Data warga tidak disimpan di HP.
 **Ingin file APK / Play Store?** Masukkan alamat PWA di <https://www.pwabuilder.com> lalu pilih
 *Android* untuk membuat paket TWA (Trusted Web Activity).
 
+## Aturan penting menulis JavaScript untuk Apps Script
+
+HtmlService **menghapus semua teks setelah `//` di dalam `<script>`**, bahkan bila `//` ada di dalam
+string. Alamat seperti `'https://contoh.com'` akan terpotong menjadi `'https:` dan seluruh skrip gagal.
+Tulis alamat sebagai `'https:\/\/contoh.com'`, dan jangan menaruh `//` di dalam komentar `/* */`.
+`node dev/build-preview.js` meniru perilaku ini dan menolak bila ada galat sintaks;
+`node dev/ambil-live.js` memeriksa kode yang benar-benar dilayani Apps Script.
+
 ## Uji tampilan di komputer (tanpa Apps Script)
 
 ```bash
